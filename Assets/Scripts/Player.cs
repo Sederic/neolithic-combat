@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
 {
     #region Player variables
     [SerializeField] float moveSpeed;
-    Vector3 currentPlayerPosition;
     #endregion
 
     #region Spear Variables
@@ -22,7 +21,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentPlayerPosition = transform.position;
         Move();
         ThrowSpear();
     }
@@ -47,7 +45,7 @@ public class Player : MonoBehaviour
         else if (isAiming && Input.GetMouseButtonUp(1)) // Release right-click to throw
         {
             isAiming = false;
-            spearInstance.transform.position = currentPlayerPosition;
+            spearInstance.transform.position = transform.position;
             spearInstance.SetActive(true);
             Rigidbody2D spearRigidbody = spearInstance.GetComponent<Rigidbody2D>();
 
