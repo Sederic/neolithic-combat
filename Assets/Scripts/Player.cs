@@ -65,6 +65,7 @@ public class Player : MonoBehaviour
         else if (isAiming && Input.GetMouseButtonUp(1)) // Release right-click to throw
         {
             isAiming = false;
+            spearInstance.transform.position = transform.position;
             spearInstance.SetActive(true);
             Rigidbody2D spearRigidbody = spearInstance.GetComponent<Rigidbody2D>();
 
