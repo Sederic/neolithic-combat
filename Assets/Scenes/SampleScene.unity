@@ -636,6 +636,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.516
+      objectReference: {fileID: 0}
+    - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1171294726, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+      propertyPath: rotationSpeed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4209548760718143457, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
       propertyPath: m_Name
       value: Player
@@ -686,30 +706,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
---- !u!1 &1171294724 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4209548760718143457, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-  m_PrefabInstance: {fileID: 1171294723}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1171294726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1171294724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f973b2642a6eb2d4eb3769f520384630, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rollSpeed: 0
-  rollCooldown: 0
-  dashSpeed: 0
-  dashCooldown: 0
-  spearPrefab: {fileID: 5033192843609820090, guid: d9555e5024a29ca4a9a7a3718bf45c6e, type: 3}
-  throwSpeed: 20
 --- !u!4 &1171294727 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4209548760718143461, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}

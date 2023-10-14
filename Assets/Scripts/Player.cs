@@ -7,6 +7,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region Player variables
+    [SerializeField] float rotationSpeed;
     [SerializeField] float moveSpeed;
     [SerializeField] float rollSpeed;
     [SerializeField] float rollCooldown;
@@ -37,12 +38,26 @@ public class Player : MonoBehaviour
     {
         Move();
         ThrowSpear();
+        FacingDirection();
+    }
 
-        // if (Input.GetKeyDown(KeyCode.LeftShift) && dashTimer <= 0) {
-        //     Dash();
-        // } else {
-        //     dashTimer -= Time.deltaTime;
-        // }
+    private void FacingDirection()
+    {
+        if (!isAiming)
+        {
+            //Get mouse cordinates - from camera to world
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            //Calculate direction from player to the mouse
+            Vector3 direction = mousePosition - transform.position;
+            //direction.z = 0; //Ensure it's a 2D direction
+
+            //Calculate the angle in degrees - I chat GPTed this formula, obviously
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            //Rotate player towards mouse
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.deltaTime);
+        }
     }
 
     private void ThrowSpear()
