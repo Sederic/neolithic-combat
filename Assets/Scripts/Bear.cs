@@ -11,6 +11,7 @@ public class Bear : MonoBehaviour
     [SerializeField] float rotationSpeed;
     [SerializeField] Transform playerTransform;
     [SerializeField] AudioSource bearAudio;
+    [SerializeField] int health = 3;
     bool isChasing;
     #endregion
 
@@ -21,9 +22,18 @@ public class Bear : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         ChasePlayer();
+    }
+
+    private void TakeDamage()
+    {
+        health--;
+        if (health <= 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void ChasePlayer()
@@ -60,6 +70,7 @@ public class Bear : MonoBehaviour
         if (collision.transform.CompareTag("Spear"))
         {
             Debug.Log("Bear hit by spear!");
+            TakeDamage();
         }
     }
 }

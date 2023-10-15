@@ -32,13 +32,17 @@ public class Player : MonoBehaviour
         rollTimer = rollCooldown;
         dashTimer = dashCooldown;
     }
-
     // Update is called once per frame
-    void Update()
+
+    private void Update()
     {
-        Move();
         ThrowSpear();
         FaceDirection();
+    }
+    // Fixed Update for consistent physics calculations
+    void FixedUpdate()
+    {
+        Move();
     }
 
     #region Player Functions
@@ -55,19 +59,17 @@ public class Player : MonoBehaviour
             //Calculate the angle in degrees - I chat GPTed this formula, obviously
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            //Rotate player towards mouse
+            //Rotate player towards mouse position
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.deltaTime);
         }
-        else if (isAiming) //Same code as above, except the last line
+        else if (isAiming)
         {
-           
+            //Same code as above, except the last line
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
             Vector3 direction = mousePosition - transform.position;
-         
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            //If player is aiming, reverse the angle (Note the "-180" on angle) 
+            //If player is aiming, reverse the angle (Note the "-180" on angle) Face opposite direction of mouse position relative to player
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 180, Vector3.forward), rotationSpeed * Time.deltaTime);
         }
     }
@@ -97,9 +99,12 @@ public class Player : MonoBehaviour
             Rigidbody2D spearRigidbody = spearInstance.GetComponent<Rigidbody2D>();
 
             Vector3 throwDirection = spearInstance.transform.right.normalized;
+
+            //Throw Spear
             spearRigidbody.velocity = throwDirection * throwSpeed; // Set the throwSpeed as a public variable or constant
         }
     }
+
 
     private void Move()
     {
