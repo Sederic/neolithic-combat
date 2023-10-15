@@ -9,13 +9,7 @@ public class Player : MonoBehaviour
     #region Player variables
     [SerializeField] float rotationSpeed;
     [SerializeField] float moveSpeed;
-    [SerializeField] float rollSpeed;
-    [SerializeField] float rollCooldown;
-    [SerializeField] float dashSpeed;
-    [SerializeField] float dashCooldown;
     private Rigidbody2D playerRB;
-    private float rollTimer;
-    private float dashTimer;
     #endregion
 
     #region Spear Variables
@@ -26,11 +20,10 @@ public class Player : MonoBehaviour
     Vector3 aimStartPosition;
     #endregion
 
+    #region Unity Functions
     void Start() 
     {
         playerRB = GetComponent<Rigidbody2D>();
-        rollTimer = rollCooldown;
-        dashTimer = dashCooldown;
     }
     // Update is called once per frame
 
@@ -44,8 +37,9 @@ public class Player : MonoBehaviour
     {
         Move();
     }
+    #endregion
 
-    #region Player Functions
+    #region Movement Functions
     private void FaceDirection()
     {
         if (!isAiming)
@@ -74,6 +68,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void Move()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+
+        Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
+        Vector2 currentPosition = transform.position;
+
+        currentPosition += movement * moveSpeed * Time.deltaTime;
+        transform.position = currentPosition;
+    }
+    #endregion
+
+    #region Spear Functions
     private void ThrowSpear()
     {
         if (Input.GetMouseButtonDown(1)) // Right-click to start aiming
@@ -104,26 +112,6 @@ public class Player : MonoBehaviour
             spearRigidbody.velocity = throwDirection * throwSpeed; // Set the throwSpeed as a public variable or constant
         }
     }
-
-
-    private void Move()
-    {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-
-        Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-        Vector2 currentPosition = transform.position;
-
-        currentPosition += movement * moveSpeed * Time.deltaTime;
-        transform.position = currentPosition;
-    }
-
-    // private void Dash() {
-    //     dashTimer = dashCooldown;
-    //     Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-    //     // playerRB.MovePosition(playerRB.position + movement * Time.fixedDeltaTime);
-    //     playerRB.velocity = movement * dashSpeed;
-    // }
     #endregion
 
     #region Damage/Death Variables
