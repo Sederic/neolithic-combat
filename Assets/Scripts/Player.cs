@@ -38,10 +38,11 @@ public class Player : MonoBehaviour
     {
         Move();
         ThrowSpear();
-        FacingDirection();
+        FaceDirection();
     }
 
-    private void FacingDirection()
+    #region Player Functions
+    private void FaceDirection()
     {
         if (!isAiming)
         {
@@ -50,13 +51,24 @@ public class Player : MonoBehaviour
 
             //Calculate direction from player to the mouse
             Vector3 direction = mousePosition - transform.position;
-            //direction.z = 0; //Ensure it's a 2D direction
 
             //Calculate the angle in degrees - I chat GPTed this formula, obviously
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
             //Rotate player towards mouse
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.deltaTime);
+        }
+        else if (isAiming) //Same code as above, except the last line
+        {
+           
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            Vector3 direction = mousePosition - transform.position;
+         
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            //If player is aiming, reverse the angle (Note the "-180" on angle) 
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 180, Vector3.forward), rotationSpeed * Time.deltaTime);
         }
     }
 
@@ -89,7 +101,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    #region Movement_functions
     private void Move()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -100,7 +111,6 @@ public class Player : MonoBehaviour
 
         currentPosition += movement * moveSpeed * Time.deltaTime;
         transform.position = currentPosition;
-        Camera.main.transform.position = new Vector3(currentPosition.x, currentPosition.y, -1);
     }
 
     // private void Dash() {
@@ -109,5 +119,16 @@ public class Player : MonoBehaviour
     //     // playerRB.MovePosition(playerRB.position + movement * Time.fixedDeltaTime);
     //     playerRB.velocity = movement * dashSpeed;
     // }
+    #endregion
+
+    #region Damage/Death Variables
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Enemy"))
+        {
+            Debug.Log("Player dead!!");
+            gameObject.SetActive(false);
+        }
+    }
     #endregion
 }

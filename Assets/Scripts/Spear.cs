@@ -7,17 +7,15 @@ public class Spear : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        DoDamage();
         if (collision.transform.CompareTag("Enemy"))
         {
             Debug.Log("EnemyHit!");
         }
-        
+        DoDamage();
     }
 
     private void DoDamage()
     {
-        
         Destroy(gameObject);
     }
 }
