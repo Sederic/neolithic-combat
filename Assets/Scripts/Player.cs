@@ -50,9 +50,7 @@ public class Player : MonoBehaviour
         ThrowSpear();
         FaceDirection();
 
-        if (!rolling) { 
-            Move();
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.Space) && rollTimer <= 0 && !rolling) {
             Roll();
@@ -64,7 +62,9 @@ public class Player : MonoBehaviour
     // Fixed Update for consistent physics calculations
     void FixedUpdate()
     {
-
+        if (!rolling) { 
+            Move();
+        }
     }
     #endregion
 
@@ -100,11 +100,11 @@ public class Player : MonoBehaviour
     private void Move()
     {
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-        // Vector2 currentPosition = transform.position;
+        Vector2 currentPosition = transform.position;
 
-        // currentPosition += movement * moveSpeed * Time.deltaTime;
-        // transform.position = currentPosition;
-        playerRB.velocity = movement * moveSpeed;
+        currentPosition += movement * moveSpeed * Time.fixedDeltaTime;
+        playerRB.MovePosition(currentPosition);
+        // playerRB.velocity = movement * moveSpeed;
     }
 
     private void Roll() {
