@@ -7,9 +7,19 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region Player Variables
-    [SerializeField] float rotationSpeed;
-    [SerializeField] float moveSpeed;
+    float horizontalInput;
+    float verticalInput;
     private Rigidbody2D playerRB;
+    #endregion
+
+    #region Movement Variables
+    [SerializeField] float moveSpeed;
+    [SerializeField] float rollSpeed;
+    [SerializeField] float rollCooldown;
+    [SerializeField] float rollDistance;
+    [SerializeField] float rotationSpeed;
+    private float rollTimer;
+    private bool rolling;
     #endregion
 
     #region Spear Variables
@@ -26,21 +36,35 @@ public class Player : MonoBehaviour
     void Start() 
     {
         playerRB = GetComponent<Rigidbody2D>();
+        rollTimer = rollCooldown;
+        rolling = false;
     }
     // Update is called once per frame
 
     private void Update()
     {
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
+
         SpearAttack();
         ThrowSpear();
         FaceDirection();
-        Move();
+
+        if (!rolling) { 
+            Move();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && rollTimer <= 0 && !rolling) {
+            Roll();
+        } else {
+            rollTimer -= Time.deltaTime;
+        }
     }
 
     // Fixed Update for consistent physics calculations
     void FixedUpdate()
     {
-        
+
     }
     #endregion
 
@@ -75,14 +99,31 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
+        // Vector2 currentPosition = transform.position;
+
+        // currentPosition += movement * moveSpeed * Time.deltaTime;
+        // transform.position = currentPosition;
+        playerRB.velocity = movement * moveSpeed;
+    }
+
+    private void Roll() {
+        rollTimer = rollCooldown;
+        StartCoroutine(RollRoutine());
+    }
+
+    private IEnumerator RollRoutine() {
 
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-        Vector2 currentPosition = transform.position;
+        playerRB.velocity = movement * rollSpeed;
+        rolling = true;
+        GetComponent<Collider2D>().enabled = false;
 
-        currentPosition += movement * moveSpeed * Time.deltaTime;
-        transform.position = currentPosition;
+        yield return new WaitForSeconds(rollDistance);
+
+        GetComponent<Collider2D>().enabled = true;
+        rolling = false;
+        playerRB.velocity = new Vector2(0f, 0f);
     }
     #endregion
 
