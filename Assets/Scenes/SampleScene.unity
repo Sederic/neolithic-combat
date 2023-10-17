@@ -467,59 +467,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.418
+      value: 0.46
       objectReference: {fileID: 0}
     - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 160525212, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 160525213, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_SortingOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171294726, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: rotationSpeed
-      value: 10
+      value: -0.003
       objectReference: {fileID: 0}
     - target: {fileID: 4209548760718143457, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 4209548760718143457, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 4209548760718143459, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_Mass
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 4209548760718143459, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
       propertyPath: m_BodyType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4209548760718143459, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_LinearDrag
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4209548760718143459, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_AngularDrag
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4209548760718143459, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_GravityScale
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4209548760718143460, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
-      propertyPath: m_SortingOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209548760718143459, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4209548760718143461, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
       propertyPath: m_RootOrder

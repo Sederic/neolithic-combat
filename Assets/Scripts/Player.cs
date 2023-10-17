@@ -6,18 +6,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    #region Player variables
+    #region Player Variables
     [SerializeField] float rotationSpeed;
     [SerializeField] float moveSpeed;
     private Rigidbody2D playerRB;
     #endregion
 
     #region Spear Variables
+    [SerializeField] GameObject spearHitbox;
     [SerializeField] GameObject spearPrefab;
     GameObject spearInstance;
     bool isAiming = false;
     [SerializeField] float throwSpeed;
     Vector3 aimStartPosition;
+    bool isAttacking = false;
     #endregion
 
     #region Unity Functions
@@ -29,13 +31,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        SpearAttack();
         ThrowSpear();
         FaceDirection();
+        Move();
     }
+
     // Fixed Update for consistent physics calculations
     void FixedUpdate()
     {
-        Move();
+        
     }
     #endregion
 
@@ -82,6 +87,21 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Spear Functions
+    private void SpearAttack()
+    {
+        if (Input.GetMouseButtonDown(0) && !isAttacking)
+        {
+            isAttacking = true;
+            //Instantiate(spearHitbox, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); 
+        }
+    }
+
+    IEnumerator AttackDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isAttacking = false;
+    }
+
     private void ThrowSpear()
     {
         if (Input.GetMouseButtonDown(1)) // Right-click to start aiming
@@ -114,12 +134,12 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    #region Damage/Death Variables
+    #region Health Functions
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.CompareTag("Enemy"))
         {
-            Debug.Log("Player dead!!");
+            Debug.Log("Player is dead!");
             gameObject.SetActive(false);
         }
     }
