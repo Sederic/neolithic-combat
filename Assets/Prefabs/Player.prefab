@@ -180,7 +180,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4209548760718143457}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -189,7 +189,7 @@ Rigidbody2D:
   m_AngularDrag: 30
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -221,8 +221,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f973b2642a6eb2d4eb3769f520384630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
   moveSpeed: 5
+  rollSpeed: 0
+  rollCooldown: 0
+  rollDistance: 0
+  rotationSpeed: 10
   spearHitbox: {fileID: 7049312287300265358, guid: c65463bc14693fc4aa212bd040934b53, type: 3}
   spearPrefab: {fileID: 5033192843609820090, guid: d9555e5024a29ca4a9a7a3718bf45c6e, type: 3}
   throwSpeed: 20
