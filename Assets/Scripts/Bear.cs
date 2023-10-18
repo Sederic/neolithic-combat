@@ -25,7 +25,7 @@ public class Bear : MonoBehaviour
     // Fixed Update is for phyisics calculations and is consistent across different machines
     void FixedUpdate()
     {
-        ChasePlayer();
+        // ChasePlayer();
     }
     #endregion
 
