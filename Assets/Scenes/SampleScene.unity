@@ -273,11 +273,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+--- !u!1 &1171294724 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4209548760718143457, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
+  m_PrefabInstance: {fileID: 1171294723}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1171294727 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4209548760718143461, guid: fe3a07757d15a3944860bd3f6f002adc, type: 3}
   m_PrefabInstance: {fileID: 1171294723}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1171294728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171294724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 520686252d1bdc04bb5bd984a5690f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimingFOV: 12
+  movingFOV: 8
+  idleFOV: 5
+  zoomTransitionDuration: 0.5
+  timeTilIdle: 0.05
 --- !u!1001 &1649282523
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -525,6 +547,10 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 1171294727}
+    - target: {fileID: 8023104501794908988, guid: 7b3ee5e2fee5b744dba49cb26331c4ca, type: 3}
+      propertyPath: m_LookAt
+      value: 
+      objectReference: {fileID: 1171294727}
     - target: {fileID: 8023104501794908989, guid: 7b3ee5e2fee5b744dba49cb26331c4ca, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -572,6 +598,14 @@ PrefabInstance:
     - target: {fileID: 8023104501794908991, guid: 7b3ee5e2fee5b744dba49cb26331c4ca, type: 3}
       propertyPath: m_Name
       value: CM vcam
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023104501794908991, guid: 7b3ee5e2fee5b744dba49cb26331c4ca, type: 3}
+      propertyPath: m_TagString
+      value: Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023104501831783454, guid: 7b3ee5e2fee5b744dba49cb26331c4ca, type: 3}
+      propertyPath: orthographic size
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b3ee5e2fee5b744dba49cb26331c4ca, type: 3}

@@ -213,4 +213,14 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
+
+    #region Accessor Functions
+    public bool aiming() {
+        return this.isAiming;
+    }
+
+    public bool isMoving() {
+        return horizontalInput != 0f || verticalInput != 0f;
+    }
+    #endregion
 }
