@@ -3,12 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     #region Player Variables
     float horizontalInput;
     float verticalInput;
+    [SerializeField] int health = 3;
+    [SerializeField] Image[] hearts;
+    [SerializeField] Sprite fullHeart;
+    [SerializeField] Sprite emptyHeart;
+    [SerializeField] int numOfHearts;
     private Rigidbody2D playerRB;
     #endregion
 
@@ -49,7 +55,7 @@ public class Player : MonoBehaviour
         SpearAttack();
         ThrowSpear();
         FaceDirection();
-
+        Health();
         
 
         if (Input.GetKeyDown(KeyCode.Space) && rollTimer <= 0 && !rolling) {
@@ -181,6 +187,28 @@ public class Player : MonoBehaviour
         if (collision.transform.CompareTag("Enemy"))
         {
             Debug.Log("Player is dead!");
+            health -= 1;
+        }
+    }
+
+    private void Health() {
+        if (health > numOfHearts) {
+            health = numOfHearts;
+        }
+        for (int i = 0; i < hearts.Length; i++) {
+            if (i < health) {
+                hearts[i].sprite = fullHeart;
+            } else {
+                hearts[i].sprite = emptyHeart;
+            }
+            if (i < numOfHearts) {
+                hearts[i].enabled = true;
+            } else {
+                hearts[i].enabled = false;
+            }
+        }
+        if (health == 0) {
+            Debug.Log("Player is now dead!");
             gameObject.SetActive(false);
         }
     }
