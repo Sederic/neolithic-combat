@@ -221,8 +221,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f973b2642a6eb2d4eb3769f520384630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
   moveSpeed: 5
+  rollSpeed: 0
+  rollCooldown: 0
+  rollDistance: 0
+  rotationSpeed: 10
   spearHitbox: {fileID: 7049312287300265358, guid: c65463bc14693fc4aa212bd040934b53, type: 3}
   spearPrefab: {fileID: 5033192843609820090, guid: d9555e5024a29ca4a9a7a3718bf45c6e, type: 3}
   throwSpeed: 20
+  clubHitbox: {fileID: 7049312287300265358, guid: 3ecc5699bcd594402ab106d3db11eb0a, type: 3}
+  clubPrefab: {fileID: 5033192843609820090, guid: 06667ce63ff92419d84fa31e413b1805, type: 3}
+  clubChargeTime: 1

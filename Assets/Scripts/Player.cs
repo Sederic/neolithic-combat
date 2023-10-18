@@ -32,6 +32,16 @@ public class Player : MonoBehaviour
     bool isAttacking = false;
     #endregion
 
+    #region Club Variables
+    [SerializeField] GameObject clubHitbox;
+    [SerializeField] GameObject clubPrefab;
+    GameObject clubInstance;
+    bool isCharging = false;
+    bool isDoneCharging = false;
+    [SerializeField] float clubChargeTime;
+    Vector3 clubChargeStartPosition;
+    #endregion
+
     #region Unity Functions
     void Start() 
     {
@@ -49,7 +59,7 @@ public class Player : MonoBehaviour
         SpearAttack();
         ThrowSpear();
         FaceDirection();
-
+        SwingClub();
         
 
         if (Input.GetKeyDown(KeyCode.Space) && rollTimer <= 0 && !rolling) {
@@ -171,6 +181,56 @@ public class Player : MonoBehaviour
 
             //Throw Spear
             spearRigidbody.velocity = throwDirection * throwSpeed; // Set the throwSpeed as a public variable or constant
+        }
+    }
+    #endregion
+
+    #region Club Functions
+    private void ClubAttack()
+    {
+        if (Input.GetKeyDown("c") && !isAttacking)
+        {
+            isAttacking = true;
+            //Instantiate(spearHitbox, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); 
+        }
+    }
+
+    IEnumerator ChargeDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isDoneCharging = true;
+    }
+
+    private void SwingClub()
+    {
+        if (!isCharging && Input.GetKeyDown("c")) // Press c to swing club
+        {
+            clubInstance = Instantiate(clubPrefab, transform.position, Quaternion.identity);
+            clubInstance.SetActive(false);
+            isCharging = true;
+
+            StartCoroutine(ChargeDuration(clubChargeTime));
+        }
+        else if (!isDoneCharging && Input.GetKeyUp("c")) // if c is release early
+        {
+            StopCoroutine(ChargeDuration(clubChargeTime));
+            isAttacking = false;
+            isCharging = false;
+        }
+        else if (isDoneCharging && Input.GetKeyUp("c")) // Release c to swing
+        {
+            isCharging = false;
+            isDoneCharging = false;
+
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Debug.Log(mousePosition);
+            Vector3 hitDirection = mousePosition - transform.position;
+            mousePosition.Normalize();
+            Debug.Log(hitDirection);
+
+            clubInstance.transform.position = transform.position + 2.0f * mousePosition;
+            clubInstance.transform.rotation = transform.rotation;
+            clubInstance.SetActive(true);
         }
     }
     #endregion
