@@ -1,18 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using Pathfinding;
 
-public class Wolf : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    #region Wolf Variables
+    #region Enemy Variables
     [SerializeField] float moveSpeed;
-    [SerializeField] float rotationSpeed = 5f;
-    [SerializeField] int health = 2;
-    #endregion 
-
+    [SerializeField] float rotationSpeed;
+    [SerializeField] int health;
+    #endregion
+    
     #region Astar Variables
     [SerializeField] float repathRate = 1f;
     private Transform targetPosition;
@@ -25,26 +23,18 @@ public class Wolf : MonoBehaviour
     private float lastRepath = float.NegativeInfinity;
     #endregion
 
-    #region Movement Variables
-    Transform playerTransform;
-    bool isChasing;
-    float prowlingSpeed;
-    float currentSpeed;
-    #endregion
-
-    #region Unity Functions
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        enemyRB = GetComponent<Rigidbody2D>();
         seeker = GetComponent<Seeker>();
-        prowlingSpeed = moveSpeed;
-        currentSpeed = moveSpeed;
+        enemyRB = GetComponent<Rigidbody2D>();
     }
+
+    // Update is called once per frame
 
     void FixedUpdate()
     {
         Move();
-        Prowl();
     }
 
     void OnPathComplete (Path p) {
@@ -61,46 +51,6 @@ public class Wolf : MonoBehaviour
             currentWaypoint = 0;
         } else {
             p.Release(this);
-        }
-    }
-    #endregion
-
-    #region Movement Functions
-    private void Prowl()
-    {
-        if (isChasing)
-        {
-            StartCoroutine(Pounce(3));
-            //Get direction towards player
-            Vector2 direction = (playerTransform.position - transform.position).normalized;
-
-            //Move towards player
-            enemyRB.velocity = direction * currentSpeed;
-
-            //Calculate angle towards player
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-            //Rotate wolf - I had to subtract 90 degrees to this angle because the current wolf sprite is a vertical capsule, make sure to remove the -90 if you wanna copy this code to another sprite
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.deltaTime);
-        }
-    }
-
-    //Charge the player after 3 seconds 
-    IEnumerator Pounce(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        currentSpeed = 2f * prowlingSpeed;
-        Debug.Log("The wolf charges!");
-    }
-    #endregion
-
-    #region Health Functions
-    private void TakeDamage()
-    {
-        health--;
-        if (health <= 0)
-        {
-            Destroy(gameObject);
         }
     }
 
@@ -128,10 +78,18 @@ public class Wolf : MonoBehaviour
         var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint/nextWaypointDistance) : 1f;
         Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
         enemyRB.velocity = direction * moveSpeed * speedFactor;
     }
-    #endregion
+
+    private void TakeDamage()
+    {
+        health--;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     #region Collision Detection
     // Radius Trigger
@@ -157,17 +115,17 @@ public class Wolf : MonoBehaviour
         }
     }
 
-    //Wolf's Body Collider
+    // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.CompareTag("Spear") || collision.transform.CompareTag("Melee"))
         {
-            Debug.Log("Wolf hit by spear!");
+            Debug.Log("Enemy hit by spear!");
             TakeDamage();
         }
         if (collision.transform.CompareTag("Player"))
         {
-            Debug.Log("Wolf hit player!");
+            Debug.Log("Enemy hit player!");
             collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);
         }
     }
