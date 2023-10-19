@@ -8,6 +8,8 @@ TagManager:
   - Spear
   - Camera
   - Melee
+  - Wall
+  - Enemy Projectile
   layers:
   - Default
   - TransparentFX

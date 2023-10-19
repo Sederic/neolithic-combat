@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class Enemy : MonoBehaviour
-{
+public class Enemy : MonoBehaviour {
     #region Enemy Variables
     [SerializeField] float moveSpeed;
     [SerializeField] float rotationSpeed;
     [SerializeField] int health;
     #endregion
-    
+
     #region Astar Variables
     [SerializeField] float repathRate = 1f;
     private Transform targetPosition;
@@ -23,6 +22,17 @@ public class Enemy : MonoBehaviour
     private float lastRepath = float.NegativeInfinity;
     #endregion
 
+    #region Shoot Variables
+    [SerializeField] bool isRanged;
+    [SerializeField] GameObject enemyArrow;
+    [SerializeField] float enemyProjectileSpeed;
+    [SerializeField] float fireRate;
+    Transform playerTransform;
+    bool playerDetected;
+    bool isShooting;
+    #endregion
+
+    #region Unity Functions
     // Start is called before the first frame update
     void Start()
     {
@@ -31,12 +41,17 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-
+    private void Update()
+    {
+        Shoot();
+    }
     void FixedUpdate()
     {
         Move();
     }
+    #endregion
 
+    #region Movement Functions
     void OnPathComplete (Path p) {
         // Debug.Log("Path calculated. Error: " + p.error);
         p.Claim(this);
@@ -55,33 +70,80 @@ public class Enemy : MonoBehaviour
     }
 
     void Move() {
-        if (path == null)
+
+        if (!isRanged)
         {
-            return;
-        }
-        reachedEndOfPath = false;
-        float distanceToWaypoint;
-        while(true) {
-            distanceToWaypoint = Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]);
-            if (distanceToWaypoint < nextWaypointDistance) {
-                if (currentWaypoint + 1 < path.vectorPath.Count) {
-                    currentWaypoint++;
-                } else {
-                    reachedEndOfPath = true;
+            if (path == null)
+            {
+                return;
+            }
+            reachedEndOfPath = false;
+            float distanceToWaypoint;
+            while (true)
+            {
+                distanceToWaypoint = Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]);
+                if (distanceToWaypoint < nextWaypointDistance)
+                {
+                    if (currentWaypoint + 1 < path.vectorPath.Count)
+                    {
+                        currentWaypoint++;
+                    }
+                    else
+                    {
+                        reachedEndOfPath = true;
+                        break;
+                    }
+                }
+                else
+                {
                     break;
                 }
-            } else {
-                break;
             }
-        }
 
-        var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint/nextWaypointDistance) : 1f;
-        Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
-        enemyRB.velocity = direction * moveSpeed * speedFactor;
+            var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint / nextWaypointDistance) : 1f;
+            Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+            enemyRB.velocity = direction * moveSpeed * speedFactor;
+        }
+    }
+    #endregion
+
+    #region Shoot Functions
+    private void Shoot()
+    {
+        if(isRanged && playerDetected && !isShooting)
+        {
+            StartCoroutine(ShootCoroutine());
+        }
     }
 
+    IEnumerator ShootCoroutine()
+    {
+        if (!isShooting)
+        {
+            isShooting = true;
+
+            // Calculate the direction to the player
+            Vector2 direction = (playerTransform.position - transform.position).normalized;
+
+            // Calculate the rotation angle in degrees
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            // Create a new projectile at the enemy's position with the correct rotation
+            GameObject newProjectile = Instantiate(enemyArrow, transform.position, Quaternion.AngleAxis(angle, Vector3.forward));
+
+            // Set the projectile's velocity to move toward the player
+            newProjectile.GetComponent<Rigidbody2D>().velocity = direction * 10.0f; // Adjust speed as needed
+
+            // Wait for the specified time before shooting again
+            yield return new WaitForSeconds(fireRate);
+        }
+        isShooting = false;
+    }
+    #endregion
+
+    #region Health Functions
     private void TakeDamage()
     {
         health--;
@@ -90,6 +152,7 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    #endregion
 
     #region Collision Detection
     // Radius Trigger
@@ -97,6 +160,11 @@ public class Enemy : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            //Get player's transform
+            playerTransform = collision.transform;
+            playerDetected = true;
+            
+
             if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
                 lastRepath = Time.time;
                 targetPosition = collision.transform;
@@ -112,6 +180,7 @@ public class Enemy : MonoBehaviour
         {
             path = null;
             // Debug.Log("Player tracked by enemy.");
+            playerDetected = false;
         }
     }
 

@@ -54,6 +54,7 @@ public class Bear : MonoBehaviour
     }
     #endregion
 
+    #region Movement Functions
     void OnPathComplete (Path p) {
         // Debug.Log("Path calculated. Error: " + p.error);
         p.Claim(this);
@@ -71,7 +72,6 @@ public class Bear : MonoBehaviour
         }
     }
 
-    #region Movement Functions
     void Move() {
         if (path == null)
         {

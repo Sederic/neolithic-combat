@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 7768623048751935693}
   - component: {fileID: 7768623048751935683}
   - component: {fileID: 1695577659}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -186,3 +186,7 @@ MonoBehaviour:
   rotationSpeed: 5
   health: 3
   repathRate: 0.5
+  isRanged: 0
+  enemyArrow: {fileID: 0}
+  enemyProjectileSpeed: 0
+  fireRate: 0

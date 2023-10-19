@@ -254,14 +254,6 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Health Functions
-    // private void OnCollisionEnter2D(Collision2D collision)
-    // {
-    //     if (collision.transform.CompareTag("Enemy"))
-    //     {
-    //         Debug.Log("Player is dead!");
-    //         health -= 1;
-    //     }
-    // }
     public void TakeDamage(int damage)
     {
         if (isInvulnerable)
