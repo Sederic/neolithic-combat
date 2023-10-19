@@ -167,15 +167,6 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Spear Functions
-    // private void SpearAttack()
-    // {
-    //     if (rangedAttackInput > 0 && !isAttacking)
-    //     {
-    //         isAttacking = true;
-    //         Instantiate(spearHitbox, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); 
-    //     }
-    // }
-
     IEnumerator AttackDuration(float duration)
     {
         yield return new WaitForSeconds(duration);
@@ -232,17 +223,17 @@ public class Player : MonoBehaviour
 
     private void SwingClub()
     {
-        if (!isCharging && !isAttacking && Input.GetKeyDown("c")) // Press c to swing club
+        if (!isCharging && !isAttacking && Input.GetMouseButtonDown(0)) // Press c to swing club
         {
             isCharging = true;
             StartCoroutine(ChargeDuration(clubChargeTime));
         }
-        else if (!isDoneCharging && Input.GetKeyUp("c")) // if c is release early
+        else if (!isDoneCharging && Input.GetMouseButtonUp(0)) // if c is release early
         {
             StopCoroutine(ChargeDuration(clubChargeTime));
             isCharging = false;
         }
-        else if (isDoneCharging && Input.GetKeyUp("c")) // Release c to swing
+        else if (isDoneCharging && Input.GetMouseButtonUp(0)) // Release c to swing
         {
             Quaternion spawnRot = transform.rotation;
             Vector2 playerPos = transform.position;

@@ -11,7 +11,13 @@ public class Spear : MonoBehaviour
     {
         if (collision.transform.CompareTag("Enemy"))
         {
-            
+            Destroy(gameObject);
+        }
+        
+        else if (collision.transform.CompareTag("Player"))
+        {
+            Destroy(gameObject);
+            Debug.Log("Picked up spear");
         }
     }
     #endregion
