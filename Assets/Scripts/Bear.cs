@@ -74,7 +74,7 @@ public class Bear : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Spear"))
+        if (collision.transform.CompareTag("Spear") || collision.transform.CompareTag("Melee"))
         {
             Debug.Log("Bear hit by spear!");
             TakeDamage();

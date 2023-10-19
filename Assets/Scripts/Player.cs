@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
     private bool rolling;
     #endregion
 
+    #region General Attacking Variables
+    bool isAttacking = false;
+    #endregion
+
     #region Spear Variables
     [SerializeField] GameObject spearHitbox;
     [SerializeField] GameObject spearPrefab;
@@ -35,7 +39,6 @@ public class Player : MonoBehaviour
     bool isAiming = false;
     [SerializeField] float throwSpeed;
     Vector3 aimStartPosition;
-    bool isAttacking = false;
     #endregion
 
     #region Club Variables
@@ -46,6 +49,7 @@ public class Player : MonoBehaviour
     bool isDoneCharging = false;
     [SerializeField] float clubChargeTime;
     Vector3 clubChargeStartPosition;
+    bool notSwingingClub = true;
     #endregion
 
     #region Unity Functions
@@ -54,25 +58,32 @@ public class Player : MonoBehaviour
         playerRB = GetComponent<Rigidbody2D>();
         rollTimer = rollCooldown;
         rolling = false;
+        //StartCoroutine(CanSwing());
     }
     // Update is called once per frame
 
     private void Update()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        if (!isAttacking) {
+            //Debug.Log("here");
+            horizontalInput = Input.GetAxis("Horizontal");
+            verticalInput = Input.GetAxis("Vertical");
 
-        SpearAttack();
-        ThrowSpear();
-        FaceDirection();
-        SwingClub();
-        Health();
-        
+            SpearAttack();
+            ThrowSpear();
+            FaceDirection();
+            SwingClub();
+            //Health();
 
-        if (Input.GetKeyDown(KeyCode.Space) && rollTimer <= 0 && !rolling) {
-            Roll();
-        } else {
-            rollTimer -= Time.deltaTime;
+
+            if (Input.GetKeyDown(KeyCode.Space) && rollTimer <= 0 && !rolling)
+            {
+                Roll();
+            }
+            else
+            {
+                rollTimer -= Time.deltaTime;
+            }
         }
     }
 
@@ -149,7 +160,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !isAttacking)
         {
-            isAttacking = true;
+            //isAttacking = true;
             //Instantiate(spearHitbox, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); 
         }
     }
@@ -193,13 +204,13 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Club Functions
-    private void ClubAttack()
+    IEnumerator CanSwing()
     {
-        if (Input.GetKeyDown("c") && !isAttacking)
+        while (clubInstance != null)
         {
-            isAttacking = true;
-            //Instantiate(spearHitbox, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); 
+            yield return null;
         }
+        isAttacking = false;
     }
 
     IEnumerator ChargeDuration(float duration)
@@ -210,34 +221,32 @@ public class Player : MonoBehaviour
 
     private void SwingClub()
     {
-        if (!isCharging && Input.GetKeyDown("c")) // Press c to swing club
+        if (!isCharging && !isAttacking && Input.GetKeyDown("c")) // Press c to swing club
         {
-            clubInstance = Instantiate(clubPrefab, transform.position, Quaternion.identity);
-            clubInstance.SetActive(false);
             isCharging = true;
-
             StartCoroutine(ChargeDuration(clubChargeTime));
         }
         else if (!isDoneCharging && Input.GetKeyUp("c")) // if c is release early
         {
             StopCoroutine(ChargeDuration(clubChargeTime));
-            isAttacking = false;
             isCharging = false;
         }
         else if (isDoneCharging && Input.GetKeyUp("c")) // Release c to swing
         {
+            Quaternion spawnRot = transform.rotation;
+            Vector2 playerPos = transform.position;
+
+            float rotAngle = 2.0f * (float)Math.Asin(spawnRot.z);
+            Vector2 spawnDir = new Vector2((float)Math.Cos(rotAngle), (float)Math.Sin(rotAngle));
+
+            Vector2 clubSpawnPos = 0.9f * spawnDir + playerPos;
+
+            clubInstance = Instantiate(clubPrefab, clubSpawnPos, spawnRot);
+
             isCharging = false;
             isDoneCharging = false;
-
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //Debug.Log(mousePosition);
-            Vector3 hitDirection = mousePosition - transform.position;
-            mousePosition.Normalize();
-            Debug.Log(hitDirection);
-
-            clubInstance.transform.position = transform.position + 2.0f * mousePosition;
-            clubInstance.transform.rotation = transform.rotation;
-            clubInstance.SetActive(true);
+            isAttacking = true;
+            StartCoroutine(CanSwing());
         }
     }
     #endregion
@@ -252,27 +261,27 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Health() {
-        if (health > numOfHearts) {
-            health = numOfHearts;
-        }
-        for (int i = 0; i < hearts.Length; i++) {
-            if (i < health) {
-                hearts[i].sprite = fullHeart;
-            } else {
-                hearts[i].sprite = emptyHeart;
-            }
-            if (i < numOfHearts) {
-                hearts[i].enabled = true;
-            } else {
-                hearts[i].enabled = false;
-            }
-        }
-        if (health == 0) {
-            Debug.Log("Player is now dead!");
-            gameObject.SetActive(false);
-        }
-    }
+    //private void Health() {
+    //    if (health > numOfHearts) {
+    //        health = numOfHearts;
+    //    }
+    //    for (int i = 0; i < hearts.Length; i++) {
+    //        if (i < health) {
+    //            hearts[i].sprite = fullHeart;
+    //        } else {
+    //            hearts[i].sprite = emptyHeart;
+    //        }
+    //        if (i < numOfHearts) {
+    //            hearts[i].enabled = true;
+    //        } else {
+    //            hearts[i].enabled = false;
+    //        }
+    //    }
+    //    if (health == 0) {
+    //        Debug.Log("Player is now dead!");
+    //        gameObject.SetActive(false);
+    //    }
+    //}
     #endregion
 
     #region Accessor Functions

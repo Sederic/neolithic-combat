@@ -89,7 +89,7 @@ public class Wolf : MonoBehaviour
     //Wolf's Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Spear"))
+        if (collision.transform.CompareTag("Spear") || collision.transform.CompareTag("Melee"))
         {
             Debug.Log("Wolf hit by spear!");
             TakeDamage();
