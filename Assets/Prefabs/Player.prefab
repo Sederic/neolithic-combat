@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 4209548760718143459}
   - component: {fileID: 4209548760718143458}
   - component: {fileID: 1171294726}
+  - component: {fileID: 1739554475}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -192,7 +193,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &4209548760718143458
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -240,3 +241,20 @@ MonoBehaviour:
   clubHitbox: {fileID: 7049312287300265358, guid: 3ecc5699bcd594402ab106d3db11eb0a, type: 3}
   clubPrefab: {fileID: 5033192843609820090, guid: 06667ce63ff92419d84fa31e413b1805, type: 3}
   clubChargeTime: 1
+--- !u!114 &1739554475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4209548760718143457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 520686252d1bdc04bb5bd984a5690f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimingFOV: 10
+  movingFOV: 8
+  idleFOV: 5
+  zoomTransitionDuration: 1
+  timeTilIdle: 0.5

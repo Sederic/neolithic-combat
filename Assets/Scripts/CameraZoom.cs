@@ -40,7 +40,7 @@ public class CameraZoom : MonoBehaviour
         if (!zooming) {
             // StopAllCoroutines();
             if (playerScript.aiming()) {
-                // Debug.Log("Aiming");
+                Debug.Log("Aiming");
                 StartCoroutine(ZoomFunction(aimingFOV, zoomTransitionDuration));
             } else {
                 // Debug.Log("Moving");
@@ -48,7 +48,7 @@ public class CameraZoom : MonoBehaviour
             }
 
             if (!playerScript.isMoving()) {
-                Debug.Log(idleTime);
+                // Debug.Log(idleTime);
                 if (idleTime >= timeTilIdle) {
                     StartCoroutine(ZoomFunction(idleFOV, zoomTransitionDuration));
                 } else {
