@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
         rangedAttackInput = Input.GetAxis("Fire2");
         ThrowSpear();
         SwingClub();
+        Health();
     }
 
     // Fixed Update for consistent physics calculations
