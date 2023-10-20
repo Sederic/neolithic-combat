@@ -89,11 +89,29 @@ public class Wolf : MonoBehaviour
     //Wolf's Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Spear") || collision.transform.CompareTag("Melee"))
+        if (collision.transform.CompareTag("Spear"))
         {
             Debug.Log("Wolf hit by spear!");
             TakeDamage();
         }
+
+        if (collision.transform.CompareTag("Melee"))
+        {
+            Debug.Log("Wolf hit by club");
+            TakeDamage();
+            KnockBack(collision.transform.position);
+        }
     }
+
+    //Wolf Knockback Function From Getting Hit
+    private void KnockBack(Vector3 colPos)
+    {
+        Vector2 knockBackDir = transform.position - colPos;
+        knockBackDir.Normalize();
+        Debug.Log(knockBackDir);
+
+        gameObject.GetComponent<Rigidbody2D>().AddForce(500000.0f * knockBackDir);
+    }
+
     #endregion
 }
