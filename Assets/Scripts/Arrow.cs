@@ -1,22 +1,21 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spear : MonoBehaviour
-{
+public class Arrow : MonoBehaviour {
+
     #region Collision Functions
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Enemy"))
+        if (collision.transform.CompareTag("Player"))
         {
+            collision.gameObject.GetComponent<Player>().TakeDamage(1);
+            Debug.Log("Player hit by arrow");
             Destroy(gameObject);
         }
-        
-        else if (collision.transform.CompareTag("Player"))
+        if (collision.transform.CompareTag("Wall"))
         {
             Destroy(gameObject);
-            Debug.Log("Picked up spear");
         }
     }
     #endregion

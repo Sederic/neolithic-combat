@@ -3,15 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Pathfinding;
 
 public class Wolf : MonoBehaviour
 {
     #region Wolf Variables
-    Rigidbody2D wolfRB;
     [SerializeField] float moveSpeed;
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] int health = 2;
     #endregion 
+
+    #region Astar Variables
+    [SerializeField] float repathRate = 1f;
+    private Transform targetPosition;
+    private Seeker seeker;
+    private Rigidbody2D enemyRB;
+    private Path path;
+    private int currentWaypoint = 0;
+    private bool reachedEndOfPath;
+    private float nextWaypointDistance = 1;
+    private float lastRepath = float.NegativeInfinity;
+    #endregion
 
     #region Movement Variables
     Transform playerTransform;
@@ -23,14 +35,33 @@ public class Wolf : MonoBehaviour
     #region Unity Functions
     private void Start()
     {
-        wolfRB = GetComponent<Rigidbody2D>();
+        enemyRB = GetComponent<Rigidbody2D>();
+        seeker = GetComponent<Seeker>();
         prowlingSpeed = moveSpeed;
         currentSpeed = moveSpeed;
     }
 
     void FixedUpdate()
     {
+        Move();
         Prowl();
+    }
+
+    void OnPathComplete (Path p) {
+        // Debug.Log("Path calculated. Error: " + p.error);
+        p.Claim(this);
+        if (!p.error)
+        {
+            if (path != null)
+            {
+                path.Release(this);
+            }
+            path = p;
+            // p.traversalProvider = new GridShapeTraversalProvider.SquareShape(3);
+            currentWaypoint = 0;
+        } else {
+            p.Release(this);
+        }
     }
     #endregion
 
@@ -44,12 +75,12 @@ public class Wolf : MonoBehaviour
             Vector2 direction = (playerTransform.position - transform.position).normalized;
 
             //Move towards player
-            wolfRB.velocity = direction * currentSpeed;
+            enemyRB.velocity = direction * currentSpeed;
 
             //Calculate angle towards player
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            //Rotate bear - I had to subtract 90 degrees to this angle because the current bear sprite is a vertical capsule, make sure to remove the -90 if you wanna copy this code to another sprite
+            //Rotate wolf - I had to subtract 90 degrees to this angle because the current wolf sprite is a vertical capsule, make sure to remove the -90 if you wanna copy this code to another sprite
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.deltaTime);
         }
     }
@@ -72,17 +103,57 @@ public class Wolf : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    void Move() {
+        if (path == null)
+        {
+            return;
+        }
+        reachedEndOfPath = false;
+        float distanceToWaypoint;
+        while(true) {
+            distanceToWaypoint = Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]);
+            if (distanceToWaypoint < nextWaypointDistance) {
+                if (currentWaypoint + 1 < path.vectorPath.Count) {
+                    currentWaypoint++;
+                } else {
+                    reachedEndOfPath = true;
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint/nextWaypointDistance) : 1f;
+        Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+        enemyRB.velocity = direction * moveSpeed * speedFactor;
+    }
     #endregion
 
     #region Collision Detection
-    //Sight Radius Trigger
-    private void OnTriggerEnter2D(Collider2D collision)
+    // Radius Trigger
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            playerTransform = collision.transform;
-            Debug.Log("Player spotted by wolf.");
-            isChasing = true;
+            if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
+                lastRepath = Time.time;
+                targetPosition = collision.transform;
+                seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
+            }
+            // Debug.Log("Player tracked by enemy.");
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            path = null;
+            // Debug.Log("Player tracked by enemy.");
         }
     }
 
@@ -100,6 +171,12 @@ public class Wolf : MonoBehaviour
             Debug.Log("Wolf hit by club");
             TakeDamage();
             KnockBack(collision.transform.position);
+        }
+
+        if (collision.transform.CompareTag("Player"))
+        {
+            Debug.Log("Wolf hit player!");
+            collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);
         }
     }
 

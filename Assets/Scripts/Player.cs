@@ -10,12 +10,17 @@ public class Player : MonoBehaviour
     #region Player Variables
     float horizontalInput;
     float verticalInput;
+    float meleeAttackInput;
+    float rangedAttackInput;
+    bool rollInput;
+    bool isInvulnerable;
     [SerializeField] int health = 3;
     [SerializeField] Image[] hearts;
     [SerializeField] Sprite fullHeart;
     [SerializeField] Sprite emptyHeart;
     [SerializeField] int numOfHearts;
     private Rigidbody2D playerRB;
+    private Renderer playerR;
     #endregion
 
     #region Movement Variables
@@ -56,40 +61,43 @@ public class Player : MonoBehaviour
     void Start() 
     {
         playerRB = GetComponent<Rigidbody2D>();
+        playerR = GetComponent<Renderer>();
         rollTimer = rollCooldown;
         rolling = false;
+        isInvulnerable = false;
         //StartCoroutine(CanSwing());
     }
+    
     // Update is called once per frame
-
+    // Should not be used for anything involving physics
     private void Update()
     {
-        if (!isAttacking) {
-            //Debug.Log("here");
-            horizontalInput = Input.GetAxis("Horizontal");
-            verticalInput = Input.GetAxis("Vertical");
-
-            SpearAttack();
-            ThrowSpear();
-            FaceDirection();
-            SwingClub();
-            //Health();
-
-
-            if (Input.GetKeyDown(KeyCode.Space) && rollTimer <= 0 && !rolling)
-            {
-                Roll();
-            }
-            else
-            {
-                rollTimer -= Time.deltaTime;
-            }
-        }
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
+        rollInput = Input.GetButton("Roll");
+        meleeAttackInput = Input.GetAxis("Fire1");
+        rangedAttackInput = Input.GetAxis("Fire2");
+        ThrowSpear();
+        SwingClub();
+        Health();
     }
 
     // Fixed Update for consistent physics calculations
-    void FixedUpdate()
+    private void FixedUpdate()
     {
+        // SpearAttack();
+        FaceDirection();
+        
+        // Health();
+
+        if (rollInput && rollTimer <= 0 && !rolling)
+        {
+            Roll();
+        }
+        else
+        {
+            rollTimer -= Time.fixedDeltaTime;
+        }
         if (!rolling) { 
             Move();
         }
@@ -128,11 +136,7 @@ public class Player : MonoBehaviour
     private void Move()
     {
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-        Vector2 currentPosition = transform.position;
-
-        currentPosition += movement * moveSpeed * Time.fixedDeltaTime;
-        playerRB.MovePosition(currentPosition);
-        // playerRB.velocity = movement * moveSpeed;
+        playerRB.velocity = movement * moveSpeed;
     }
 
     private void Roll() {
@@ -144,27 +148,26 @@ public class Player : MonoBehaviour
 
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
         playerRB.velocity = movement * rollSpeed;
+        
         rolling = true;
-        GetComponent<Collider2D>().enabled = false;
+        isInvulnerable = true;
+        
+        Color temp = playerR.material.GetColor("_Color");
+        playerR.material.SetColor("_Color", Color.yellow);
 
         yield return new WaitForSeconds(rollDistance);
 
-        GetComponent<Collider2D>().enabled = true;
+        playerR.material.SetColor("_Color", temp);
+        isInvulnerable = false;
         rolling = false;
-        playerRB.velocity = new Vector2(0f, 0f);
+    }
+
+    public void ProcessObstacleCollision() {
+
     }
     #endregion
 
     #region Spear Functions
-    private void SpearAttack()
-    {
-        if (Input.GetMouseButtonDown(0) && !isAttacking)
-        {
-            //isAttacking = true;
-            //Instantiate(spearHitbox, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity); 
-        }
-    }
-
     IEnumerator AttackDuration(float duration)
     {
         yield return new WaitForSeconds(duration);
@@ -221,67 +224,75 @@ public class Player : MonoBehaviour
 
     private void SwingClub()
     {
-        if (!isCharging && !isAttacking && Input.GetKeyDown("c")) // Press c to swing club
+        if (!isCharging && !isAttacking && Input.GetMouseButtonDown(0)) // Press c to swing club
         {
             isCharging = true;
             StartCoroutine(ChargeDuration(clubChargeTime));
         }
-        else if (!isDoneCharging && Input.GetKeyUp("c")) // if c is release early
+        else if (!isDoneCharging && Input.GetMouseButtonUp(0)) // if c is release early
         {
             StopCoroutine(ChargeDuration(clubChargeTime));
             isCharging = false;
         }
-        else if (isDoneCharging && Input.GetKeyUp("c")) // Release c to swing
+        else if (isDoneCharging && Input.GetMouseButtonUp(0)) // Release c to swing
         {
+            // (Holy fuck I had to read a paper to make this work)
+            // Stores rotation and position of player
             Quaternion spawnRot = transform.rotation;
             Vector2 playerPos = transform.position;
 
+            // Calculates the angle of rotation of the player so melee hitbox spawns infront of player
             float rotAngle = 2.0f * (float)Math.Asin(spawnRot.z);
             Vector2 spawnDir = new Vector2((float)Math.Cos(rotAngle), (float)Math.Sin(rotAngle));
 
+            // Calculate spawn placement of hitbox
             Vector2 clubSpawnPos = 0.9f * spawnDir + playerPos;
 
+            // Instantiate hitbox
             clubInstance = Instantiate(clubPrefab, clubSpawnPos, spawnRot);
 
             isCharging = false;
             isDoneCharging = false;
             isAttacking = true;
+
+            // Start coroutine to lock rotation and action of player other then movement
             StartCoroutine(CanSwing());
         }
     }
     #endregion
 
     #region Health Functions
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void TakeDamage(int damage)
     {
-        if (collision.transform.CompareTag("Enemy"))
+        if (isInvulnerable)
         {
-            Debug.Log("Player is dead!");
-            health -= 1;
+            return;
         }
+        Debug.Log("Player took damage: " + damage);
+        health -= 1;
     }
 
-    //private void Health() {
-    //    if (health > numOfHearts) {
-    //        health = numOfHearts;
-    //    }
-    //    for (int i = 0; i < hearts.Length; i++) {
-    //        if (i < health) {
-    //            hearts[i].sprite = fullHeart;
-    //        } else {
-    //            hearts[i].sprite = emptyHeart;
-    //        }
-    //        if (i < numOfHearts) {
-    //            hearts[i].enabled = true;
-    //        } else {
-    //            hearts[i].enabled = false;
-    //        }
-    //    }
-    //    if (health == 0) {
-    //        Debug.Log("Player is now dead!");
-    //        gameObject.SetActive(false);
-    //    }
-    //}
+    private void Health() {
+       if (health > numOfHearts) {
+           health = numOfHearts;
+       }
+       for (int i = 0; i < hearts.Length; i++) {
+           if (i < health) {
+               hearts[i].sprite = fullHeart;
+           } else {
+               hearts[i].sprite = emptyHeart;
+           }
+           if (i < numOfHearts) {
+               hearts[i].enabled = true;
+           } else {
+               hearts[i].enabled = false;
+           }
+       }
+       if (health <= 0) {
+           Debug.Log("Player is now dead!");
+           gameObject.SetActive(false);
+       }
+    }
     #endregion
 
     #region Accessor Functions

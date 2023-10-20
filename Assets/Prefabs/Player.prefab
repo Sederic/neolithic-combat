@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 160525212}
   - component: {fileID: 160525213}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Facing Direction Identifier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4209548760718143459}
   - component: {fileID: 4209548760718143458}
   - component: {fileID: 1171294726}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -180,13 +180,13 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4209548760718143457}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 50
-  m_LinearDrag: 30
-  m_AngularDrag: 30
+  m_LinearDrag: 0
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -226,13 +226,13 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  fullHeart: {fileID: 0}
-  emptyHeart: {fileID: 0}
-  numOfHearts: 0
+  fullHeart: {fileID: 21300000, guid: a6a3094d302c69748b6558a997d35670, type: 3}
+  emptyHeart: {fileID: 21300000, guid: fda8a7ccbd97d9347b3df61e4c8c8fa1, type: 3}
+  numOfHearts: 3
   moveSpeed: 5
-  rollSpeed: 0
-  rollCooldown: 0
-  rollDistance: 0
+  rollSpeed: 10
+  rollCooldown: 1
+  rollDistance: 0.5
   rotationSpeed: 10
   spearHitbox: {fileID: 7049312287300265358, guid: c65463bc14693fc4aa212bd040934b53, type: 3}
   spearPrefab: {fileID: 5033192843609820090, guid: d9555e5024a29ca4a9a7a3718bf45c6e, type: 3}
