@@ -137,7 +137,7 @@ public class Enemy : MonoBehaviour {
 
     IEnumerator ShootCoroutine()
     {
-        if (!isShooting)
+        if (!isShooting && HasLineOfSight())
         {
             isShooting = true;
 
@@ -188,11 +188,7 @@ public class Enemy : MonoBehaviour {
                     targetPosition = collision.transform;
                     seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
                 }
-            } else {
-                path = null;
-                playerDetected = false;
             }
-            // Debug.Log("Player tracked by enemy.");
         }
     }
 

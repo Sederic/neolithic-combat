@@ -92,6 +92,23 @@ public class Wolf : MonoBehaviour
         currentSpeed = 2f * prowlingSpeed;
         Debug.Log("The wolf charges!");
     }
+
+    private bool HasLineOfSight() {
+        if (playerTransform != null) {
+            int layerMask =~ LayerMask.GetMask("Enemy");
+            Vector3 direction = (playerTransform.position - transform.position);
+
+            RaycastHit2D los = Physics2D.Raycast(transform.position, direction, direction.magnitude, layerMask);
+            Debug.DrawRay(transform.position, direction);
+
+            if (los.collider != null) {
+                if (los.collider.gameObject.CompareTag("Player")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     #endregion
 
     #region Health Functions
@@ -139,10 +156,17 @@ public class Wolf : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
-                lastRepath = Time.time;
-                targetPosition = collision.transform;
-                seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
+            //Get player's transform
+            playerTransform = collision.transform;
+
+            if (HasLineOfSight()) {
+                // playerDetected = true;
+
+                if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
+                    lastRepath = Time.time;
+                    targetPosition = collision.transform;
+                    seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
+                }
             }
             // Debug.Log("Player tracked by enemy.");
         }
