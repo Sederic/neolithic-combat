@@ -8,12 +8,15 @@ public class Spear : MonoBehaviour
     private bool canBePickedUp = false;
     private void Start()
     {
-        StartCoroutine(AvoidPlayer());
+        StartCoroutine(RetriavableCheck());
     }
 
-    IEnumerator AvoidPlayer()
+    IEnumerator RetriavableCheck()
     {
-        yield return new WaitForSeconds(0.1f);
+        while (gameObject.GetComponent<Rigidbody2D>().velocity.magnitude > 3.0f)
+        {
+            yield return null;
+        }
         canBePickedUp = true;
         Debug.Log("done");
     }
@@ -21,7 +24,7 @@ public class Spear : MonoBehaviour
     #region Collision Functions
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Enemy"))
+        if (collision.transform.CompareTag("Enemy") && !canBePickedUp)
         {
             Destroy(gameObject);
         }

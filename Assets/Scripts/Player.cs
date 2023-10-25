@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
         }
         SwingClub();
         Health();
-        Debug.Log(spearAmmoCount);
+        //Debug.Log(spearAmmoCount);
     }
 
     // Fixed Update for consistent physics calculations
