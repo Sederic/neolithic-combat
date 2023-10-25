@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
     bool isAiming = false;
     [SerializeField] float throwSpeed;
     Vector3 aimStartPosition;
+    [SerializeField] public int spearAmmoCount;
     #endregion
 
     #region Club Variables
@@ -65,7 +66,7 @@ public class Player : MonoBehaviour
         rollTimer = rollCooldown;
         rolling = false;
         isInvulnerable = false;
-        //StartCoroutine(CanSwing());
+
     }
     
     // Update is called once per frame
@@ -77,9 +78,13 @@ public class Player : MonoBehaviour
         rollInput = Input.GetButton("Roll");
         meleeAttackInput = Input.GetAxis("Fire1");
         rangedAttackInput = Input.GetAxis("Fire2");
-        ThrowSpear();
+        if (spearAmmoCount > 0)
+        {
+            ThrowSpear();
+        }
         SwingClub();
         Health();
+        Debug.Log(spearAmmoCount);
     }
 
     // Fixed Update for consistent physics calculations
@@ -202,7 +207,9 @@ public class Player : MonoBehaviour
 
             //Throw Spear
             spearRigidbody.velocity = throwDirection * throwSpeed; // Set the throwSpeed as a public variable or constant
+            spearAmmoCount -= 1;
         }
+        
     }
     #endregion
 
