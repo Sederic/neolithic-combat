@@ -68,11 +68,6 @@ public class Player : MonoBehaviour
         rolling = false;
         isInvulnerable = false;
         animator = gameObject.GetComponent<Animator>();
-        animator.SetBool("IsChargingMelee", false);
-        animator.SetBool("IsMeleeing", false);
-        animator.SetBool("AimingSpear", false);
-        animator.SetBool("ThrowingSpear", false);
-        animator.SetTrigger("DoneAttacking");
     }
     
     // Update is called once per frame
@@ -260,7 +255,7 @@ public class Player : MonoBehaviour
             StopCoroutine(ChargeDuration());
             isCharging = false;
             isDoneCharging = false;
-            animator.SetTrigger("BrokeCharginingMelee");
+            animator.SetTrigger("BrokeChargingMelee");
         }
         else if (isDoneCharging && Input.GetMouseButtonUp(0)) // Release c to swing
         {
