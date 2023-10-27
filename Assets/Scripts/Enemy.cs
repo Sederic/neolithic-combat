@@ -38,6 +38,8 @@ public class Enemy : MonoBehaviour {
     {
         seeker = GetComponent<Seeker>();
         enemyRB = GetComponent<Rigidbody2D>();
+        playerDetected = false;
+        reachedEndOfPath = true;
     }
 
     // Update is called once per frame
@@ -47,6 +49,14 @@ public class Enemy : MonoBehaviour {
     }
     void FixedUpdate()
     {
+        if (HasLineOfSight()) {
+            // Chasing behavior
+            Repath(playerTransform.position);
+        } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
+            // Wandering behavior 
+            Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+        }
+        
         Move();
     }
     #endregion
@@ -105,6 +115,14 @@ public class Enemy : MonoBehaviour {
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
             enemyRB.velocity = direction * moveSpeed * speedFactor;
+        }
+    }
+
+    void Repath(Vector2 targetPos) {
+        if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
+            lastRepath = Time.time;
+            // targetPosition = collision.transform;
+            seeker.StartPath(transform.position, targetPos, OnPathComplete);
         }
     }
 
@@ -179,16 +197,7 @@ public class Enemy : MonoBehaviour {
         {
             //Get player's transform
             playerTransform = collision.transform;
-            
-            if (HasLineOfSight()) {
-                playerDetected = true;
-
-                if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
-                    lastRepath = Time.time;
-                    targetPosition = collision.transform;
-                    seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
-                }
-            }
+            playerDetected = true;
         }
     }
 
