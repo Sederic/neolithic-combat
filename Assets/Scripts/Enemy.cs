@@ -198,6 +198,15 @@ public class Enemy : MonoBehaviour {
             //Get player's transform
             playerTransform = collision.transform;
             playerDetected = true;
+             // if (HasLineOfSight()) {
+            //     // playerDetected = true;
+
+            //     if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
+            //         lastRepath = Time.time;
+            //         targetPosition = collision.transform;
+            //         seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
+            //     }
+            // }
         }
     }
 
