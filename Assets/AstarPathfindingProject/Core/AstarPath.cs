@@ -825,7 +825,11 @@ public class AstarPath : VersionedMonoBehaviour {
 	/// See: PathLog
 	/// See: Pathfinding.Path.DebugString
 	/// </summary>
-	private void LogPathResults (Path path) {
+	/// 
+
+	//Disabled this bottom method because it was clogging up the console - Sergio
+
+/*	private void LogPathResults (Path path) {
 		if (logPathResults != PathLog.None && (path.error || logPathResults != PathLog.OnlyErrors)) {
 			string debug = (path as IPathInternals).DebugString(logPathResults);
 
@@ -837,7 +841,8 @@ public class AstarPath : VersionedMonoBehaviour {
 				Debug.Log(debug);
 			}
 		}
-	}
+	}*/
+
 
 	/// <summary>
 	/// Checks if any work items need to be executed
@@ -1283,7 +1288,7 @@ public class AstarPath : VersionedMonoBehaviour {
 		};
 
 		pathProcessor.OnPathPostSearch += path => {
-			LogPathResults(path);
+//			LogPathResults(path);
 			var tmp = OnPathPostSearch;
 			if (tmp != null) tmp(path);
 		};
