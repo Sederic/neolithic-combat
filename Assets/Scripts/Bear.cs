@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,6 +38,14 @@ public class Bear : MonoBehaviour
     // Fixed Update is for phyisics calculations and is consistent across different machines
     void FixedUpdate()
     {
+        if (HasLineOfSight()) {
+            // Chasing behavior
+            Repath(playerTransform.position);
+        } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
+            // Wandering behavior 
+            Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+        }
+
         Move();
     }
 
@@ -101,6 +108,14 @@ public class Bear : MonoBehaviour
         enemyRB.velocity = direction * moveSpeed * speedFactor;
     }
 
+    void Repath(Vector2 targetPos) {
+        if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
+            lastRepath = Time.time;
+            // targetPosition = collision.transform;
+            seeker.StartPath(transform.position, targetPos, OnPathComplete);
+        }
+    }
+
     private bool HasLineOfSight() {
         if (playerTransform != null) {
             int layerMask =~ LayerMask.GetMask("Enemy");
@@ -127,17 +142,6 @@ public class Bear : MonoBehaviour
         {
             //Get player's transform
             playerTransform = collision.transform;
-
-            if (HasLineOfSight()) {
-                // playerDetected = true;
-
-                if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
-                    lastRepath = Time.time;
-                    targetPosition = collision.transform;
-                    seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
-                }
-            }
-            // Debug.Log("Player tracked by enemy.");
         }
     }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -43,6 +42,14 @@ public class Wolf : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (HasLineOfSight()) {
+            // Chasing behavior
+            Repath(playerTransform.position);
+        } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
+            // Wandering behavior 
+            Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+        }
+
         Move();
         Prowl();
     }
@@ -91,6 +98,14 @@ public class Wolf : MonoBehaviour
         yield return new WaitForSeconds(delay);
         currentSpeed = 2f * prowlingSpeed;
         Debug.Log("The wolf charges!");
+    }
+
+    void Repath(Vector2 targetPos) {
+        if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
+            lastRepath = Time.time;
+            // targetPosition = collision.transform;
+            seeker.StartPath(transform.position, targetPos, OnPathComplete);
+        }
     }
 
     private bool HasLineOfSight() {
@@ -158,16 +173,6 @@ public class Wolf : MonoBehaviour
         {
             //Get player's transform
             playerTransform = collision.transform;
-
-            if (HasLineOfSight()) {
-                // playerDetected = true;
-
-                if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
-                    lastRepath = Time.time;
-                    targetPosition = collision.transform;
-                    seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
-                }
-            }
             // Debug.Log("Player tracked by enemy.");
         }
     }
