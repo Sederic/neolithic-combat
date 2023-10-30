@@ -5,36 +5,24 @@ using UnityEngine;
 
 public class Club : MonoBehaviour
 {
-
+    #region Club Variables
     [SerializeField] float swingDuration;
-    private bool done = false;
-    GameObject player;
+    #endregion
 
+    #region Unity Functions
     private void Start()
     {
-        player = GameObject.Find("Player");
         StartCoroutine(TimedDeath());
     }
+    #endregion
 
-    private void Update()
-    {
-        Quaternion rot = player.transform.rotation;
-        Vector2 playerPos = player.transform.position;
-
-        float rotAngle = 2.0f * (float)Math.Asin(rot.z);
-        Vector2 dir = new Vector2((float)Math.Cos(rotAngle), (float)Math.Sin(rotAngle));
-
-        Vector2 clubPos = 0.9f * dir + playerPos;
-
-        transform.position = clubPos;
-        transform.rotation = rot;
-    }
-
+    #region Club Functions
     IEnumerator TimedDeath()
     {
         yield return new WaitForSeconds(swingDuration);
         Destroy(gameObject);
     }
+    #endregion 
 
     #region Collision Functions
     private void OnCollisionEnter2D(Collision2D collision)

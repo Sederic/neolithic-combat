@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
 
     #region General Attacking Variables
     bool isAttacking = false;
+    [SerializeField] float attackTimer;
     #endregion
 
     #region Spear Variables
@@ -51,12 +52,8 @@ public class Player : MonoBehaviour
     #region Club Variables
     [SerializeField] GameObject clubHitbox;
     [SerializeField] GameObject clubPrefab;
-    GameObject clubInstance;
-    bool isCharging = false;
-    bool isDoneCharging = false;
     [SerializeField] float clubChargeTime;
-    Vector3 clubChargeStartPosition;
-    bool notSwingingClub = true;
+
     #endregion
 
     #region Unity Functions
@@ -138,14 +135,12 @@ public class Player : MonoBehaviour
         }
 
         float rotAngleDegrees = 2.0f * (float)Math.Asin(transform.rotation.z) * (180f / (float)Math.PI);
-        animator.SetFloat("RotAngle", rotAngleDegrees < 0 ? rotAngleDegrees + 360f : rotAngleDegrees);
     }
 
     private void Move()
     {
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
         playerRB.velocity = movement * moveSpeed;
-        animator.SetFloat("Speed", playerRB.velocity.magnitude);
     }
 
     private void Roll() {
@@ -225,64 +220,44 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Club Functions
-    IEnumerator CanSwing()
-    {
-        while (clubInstance != null)
-        {
-            yield return null;
-        }
-        isAttacking = false;
-        animator.SetTrigger("DoneAttacking");
-    }
-
-    IEnumerator ChargeDuration()
-    {
-        yield return new WaitForSeconds(clubChargeTime);
-        isDoneCharging = true;
-        animator.SetTrigger("DoneChargingMelee");
-    }
 
     private void SwingClub()
     {
-        if (!isCharging && !isAttacking && Input.GetMouseButtonDown(0)) // Press c to swing club
+        if (Input.GetMouseButtonDown(0))
         {
-            isCharging = true;
-            StartCoroutine(ChargeDuration());
-            animator.SetTrigger("ChargingMelee");
+            StartCoroutine(ClubAttack());
         }
-        else if (!isDoneCharging && Input.GetMouseButtonUp(0)) // if c is release early
+
+        if (Input.GetMouseButtonUp(0) && isAttacking)
         {
-            StopCoroutine(ChargeDuration());
-            isCharging = false;
-            isDoneCharging = false;
-            animator.SetTrigger("BrokeChargingMelee");
+            StopCoroutine(ClubAttack());
+            ExecuteAttack();
         }
-        else if (isDoneCharging && Input.GetMouseButtonUp(0)) // Release c to swing
-        {
-            // (Holy fuck I had to read a paper to make this work)
-            // Stores rotation and position of player
-            Quaternion spawnRot = transform.rotation;
-            Vector2 playerPos = transform.position;
+    }
 
-            // Calculates the angle of rotation of the player so melee hitbox spawns infront of player
-            float rotAngle = 2.0f * (float)Math.Asin(spawnRot.z);
-            Vector2 spawnDir = new Vector2((float)Math.Cos(rotAngle), (float)Math.Sin(rotAngle));
+    IEnumerator ClubAttack()
+    {
+        yield return new WaitForSeconds(attackTimer);
+        isAttacking = true;
+    }
 
-            // Calculate spawn placement of hitbox
-            Vector2 clubSpawnPos = 0.9f * spawnDir + playerPos;
+    private void ExecuteAttack()
+    {
+        //Rotation and position of player
+        Quaternion spawnRotation = transform.rotation;
+        Vector2 playerPosition = transform.position;
 
-            // Instantiate hitbox
-            clubInstance = Instantiate(clubPrefab, clubSpawnPos, spawnRot);
+        //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
+        float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
+        Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
-            isCharging = false;
-            isDoneCharging = false;
-            isAttacking = true;
+        //Calculate placement of hitbox
+        Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
 
-            animator.SetTrigger("SwingingMelee");
+        //Instantiate hitbox
+        Instantiate(clubPrefab, hitboxSpawnPosition, spawnRotation);
 
-            // Start coroutine to lock rotation and action of player other then movement
-            StartCoroutine(CanSwing());
-        }
+        isAttacking = false;
     }
     #endregion
 
