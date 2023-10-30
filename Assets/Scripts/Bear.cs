@@ -8,10 +8,14 @@ public class Bear : MonoBehaviour
     #region Bear Variables
     Rigidbody2D bearRB;
     [SerializeField] float moveSpeed;
+    [Tooltip("Divides moveSpeed to determine wandering speed")]
+    [SerializeField] float wanderFactor;
     [SerializeField] float rotationSpeed;
     [SerializeField] AudioSource bearAudio;
     [SerializeField] int health = 3;
     bool isChasing;
+    private float wanderSpeed;
+    private float chaseSpeed;
     #endregion
 
     #region Astar Variables
@@ -33,6 +37,8 @@ public class Bear : MonoBehaviour
     {
         enemyRB = GetComponent<Rigidbody2D>();
         seeker = GetComponent<Seeker>();
+        chaseSpeed = moveSpeed;
+        wanderSpeed = moveSpeed / wanderFactor;
     }
 
     // Fixed Update is for phyisics calculations and is consistent across different machines
@@ -40,9 +46,11 @@ public class Bear : MonoBehaviour
     {
         if (HasLineOfSight()) {
             // Chasing behavior
+            moveSpeed = chaseSpeed;
             Repath(playerTransform.position);
         } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
             // Wandering behavior 
+            moveSpeed = wanderSpeed;
             Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
         }
 

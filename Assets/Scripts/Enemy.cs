@@ -6,8 +6,12 @@ using Pathfinding;
 public class Enemy : MonoBehaviour {
     #region Enemy Variables
     [SerializeField] float moveSpeed;
+    [Tooltip("Divides moveSpeed to determine wandering speed")]
+    [SerializeField] float wanderFactor;
     [SerializeField] float rotationSpeed;
     [SerializeField] int health;
+    private float wanderSpeed;
+    private float chaseSpeed;
     #endregion
 
     #region Astar Variables
@@ -40,6 +44,9 @@ public class Enemy : MonoBehaviour {
         enemyRB = GetComponent<Rigidbody2D>();
         playerDetected = false;
         reachedEndOfPath = true;
+
+        chaseSpeed = moveSpeed;
+        wanderSpeed = moveSpeed / wanderFactor;
     }
 
     // Update is called once per frame
@@ -51,9 +58,11 @@ public class Enemy : MonoBehaviour {
     {
         if (HasLineOfSight()) {
             // Chasing behavior
+            moveSpeed = chaseSpeed;
             Repath(playerTransform.position);
         } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
             // Wandering behavior 
+            moveSpeed = wanderSpeed;
             Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
         }
         
