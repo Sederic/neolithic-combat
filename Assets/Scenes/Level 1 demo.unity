@@ -7568,6 +7568,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 4841562459421465944, guid: 900190f02a77b1445a61afe6f1662d1f, type: 3}
+      propertyPath: wanderFactor
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7154587635361596990, guid: 900190f02a77b1445a61afe6f1662d1f, type: 3}
       propertyPath: m_RootOrder
       value: 0
