@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour {
     [SerializeField] float moveSpeed;
     [SerializeField] float rotationSpeed;
     [SerializeField] int health;
+    [SerializeField] float sightRadius;
     #endregion
 
     #region Astar Variables
@@ -36,6 +37,7 @@ public class Enemy : MonoBehaviour {
     // Start is called before the first frame update
     void Start()
     {
+        playerTransform = FindObjectOfType<Player>().transform;
         seeker = GetComponent<Seeker>();
         enemyRB = GetComponent<Rigidbody2D>();
         playerDetected = false;
@@ -126,18 +128,19 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    private bool HasLineOfSight() {
-        if (playerTransform != null) {
-            int layerMask =~ LayerMask.GetMask("Enemy");
-            Vector3 direction = (playerTransform.position - transform.position);
+    private bool HasLineOfSight() 
+    {
+        int layerMask =~ LayerMask.GetMask("Enemy");
+        Vector3 direction = (playerTransform.position - transform.position);
 
-            RaycastHit2D los = Physics2D.Raycast(transform.position, direction, direction.magnitude, layerMask);
-            Debug.DrawRay(transform.position, direction);
+        RaycastHit2D los = Physics2D.Raycast(transform.position, direction, sightRadius, layerMask);
+        Debug.DrawRay(transform.position, direction);
 
-            if (los.collider != null) {
-                if (los.collider.gameObject.CompareTag("Player")) {
-                    return true;
-                }
+        if (los.collider != null) {
+            if (los.collider.gameObject.CompareTag("Player")) 
+            {
+                playerDetected = true;
+                return true;
             }
         }
         return false;
@@ -190,33 +193,12 @@ public class Enemy : MonoBehaviour {
     #endregion
 
     #region Collision Detection
-    // Radius Trigger
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            //Get player's transform
-            playerTransform = collision.transform;
-            playerDetected = true;
-             // if (HasLineOfSight()) {
-            //     // playerDetected = true;
 
-            //     if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
-            //         lastRepath = Time.time;
-            //         targetPosition = collision.transform;
-            //         seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
-            //     }
-            // }
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.transform.CompareTag("Spear"))
         {
-            path = null;
-            // Debug.Log("Player tracked by enemy.");
-            playerDetected = false;
+            TakeDamage();
         }
     }
 

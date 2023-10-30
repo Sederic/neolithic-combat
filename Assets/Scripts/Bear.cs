@@ -11,6 +11,7 @@ public class Bear : MonoBehaviour
     [SerializeField] float rotationSpeed;
     [SerializeField] AudioSource bearAudio;
     [SerializeField] int health = 3;
+    [SerializeField] float sightRadius;
     bool isChasing;
     #endregion
 
@@ -31,6 +32,7 @@ public class Bear : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerTransform = FindObjectOfType<Player>().transform;
         enemyRB = GetComponent<Rigidbody2D>();
         seeker = GetComponent<Seeker>();
     }
@@ -121,7 +123,7 @@ public class Bear : MonoBehaviour
             int layerMask =~ LayerMask.GetMask("Enemy");
             Vector3 direction = (playerTransform.position - transform.position);
 
-            RaycastHit2D los = Physics2D.Raycast(transform.position, direction, direction.magnitude, layerMask);
+            RaycastHit2D los = Physics2D.Raycast(transform.position, direction, sightRadius, layerMask);
             Debug.DrawRay(transform.position, direction);
 
             if (los.collider != null) {
@@ -135,24 +137,7 @@ public class Bear : MonoBehaviour
     #endregion
 
     #region Collision Functions
-    // Radius Trigger
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            //Get player's transform
-            playerTransform = collision.transform;
-        }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            path = null;
-            // Debug.Log("Player tracked by enemy.");
-        }
-    }
 
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
@@ -166,6 +151,15 @@ public class Bear : MonoBehaviour
         {
             Debug.Log("Bear hit player!");
             collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.CompareTag("Spear"))
+        {
+            TakeDamage();
+            Debug.Log("bear hit by spear throw");
         }
     }
     #endregion

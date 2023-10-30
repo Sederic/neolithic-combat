@@ -238,6 +238,7 @@ MonoBehaviour:
   rotationSpeed: 5
   bearAudio: {fileID: 0}
   health: 3
+  sightRadius: 10
   repathRate: 1
 --- !u!50 &8151471394264818402
 Rigidbody2D:

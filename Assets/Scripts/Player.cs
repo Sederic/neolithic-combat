@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
             ThrowSpear();
         }
         SwingClub();
-        Health();
+//        Health();
     }
 
     // Fixed Update for consistent physics calculations
@@ -296,7 +296,7 @@ public class Player : MonoBehaviour
         Debug.Log("Player took damage: " + damage);
         health -= 1;
     }
-
+/*
     private void Health() {
        if (health > numOfHearts) {
            health = numOfHearts;
@@ -317,7 +317,7 @@ public class Player : MonoBehaviour
            Debug.Log("Player is now dead!");
            gameObject.SetActive(false);
        }
-    }
+    }*/
     #endregion
 
     #region Accessor Functions

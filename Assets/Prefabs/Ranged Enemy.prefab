@@ -20,6 +20,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5467124801883771251, guid: c7ec424729a6aa94c9ebc12401d9eb6c, type: 3}
     - target: {fileID: 1695577659, guid: 9ac694900aec5e6408c9e5a0a9cf994c, type: 3}
+      propertyPath: sightRadius
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1695577659, guid: 9ac694900aec5e6408c9e5a0a9cf994c, type: 3}
       propertyPath: enemyProjectileSpeed
       value: 5
       objectReference: {fileID: 0}

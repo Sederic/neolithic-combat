@@ -10,6 +10,7 @@ public class Wolf : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] int health = 2;
+    [SerializeField] float sightRadius;
     #endregion 
 
     #region Astar Variables
@@ -34,6 +35,7 @@ public class Wolf : MonoBehaviour
     #region Unity Functions
     private void Start()
     {
+        playerTransform = FindObjectOfType<Player>().transform;
         enemyRB = GetComponent<Rigidbody2D>();
         seeker = GetComponent<Seeker>();
         prowlingSpeed = moveSpeed;
@@ -113,7 +115,7 @@ public class Wolf : MonoBehaviour
             int layerMask =~ LayerMask.GetMask("Enemy");
             Vector3 direction = (playerTransform.position - transform.position);
 
-            RaycastHit2D los = Physics2D.Raycast(transform.position, direction, direction.magnitude, layerMask);
+            RaycastHit2D los = Physics2D.Raycast(transform.position, direction, sightRadius, layerMask);
             Debug.DrawRay(transform.position, direction);
 
             if (los.collider != null) {
@@ -167,24 +169,6 @@ public class Wolf : MonoBehaviour
 
     #region Collision Detection
     // Radius Trigger
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            //Get player's transform
-            playerTransform = collision.transform;
-            // Debug.Log("Player tracked by enemy.");
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            path = null;
-            // Debug.Log("Player tracked by enemy.");
-        }
-    }
 
     //Wolf's Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
@@ -209,6 +193,14 @@ public class Wolf : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.CompareTag("Spear"))
+        {
+            TakeDamage();
+        }
+    }
+
     //Wolf Knockback Function From Getting Hit
     private void KnockBack(Vector3 colPos)
     {
@@ -218,6 +210,5 @@ public class Wolf : MonoBehaviour
 
         gameObject.GetComponent<Rigidbody2D>().AddForce(500000.0f * knockBackDir);
     }
-
     #endregion
 }
