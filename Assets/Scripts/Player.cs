@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] int numOfHearts;
     private Rigidbody2D playerRB;
     private Renderer playerR;
+    private Animator animator;
     #endregion
 
     #region Movement Variables
@@ -66,7 +67,7 @@ public class Player : MonoBehaviour
         rollTimer = rollCooldown;
         rolling = false;
         isInvulnerable = false;
-
+        animator = gameObject.GetComponent<Animator>();
     }
     
     // Update is called once per frame
@@ -83,8 +84,7 @@ public class Player : MonoBehaviour
             ThrowSpear();
         }
         SwingClub();
-        Health();
-        //Debug.Log(spearAmmoCount);
+//        Health();
     }
 
     // Fixed Update for consistent physics calculations
@@ -136,12 +136,16 @@ public class Player : MonoBehaviour
             //If player is aiming, reverse the angle (Note the "-180" on angle) Face opposite direction of mouse position relative to player
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 180, Vector3.forward), rotationSpeed * Time.deltaTime);
         }
+
+        float rotAngleDegrees = 2.0f * (float)Math.Asin(transform.rotation.z) * (180f / (float)Math.PI);
+        animator.SetFloat("RotAngle", rotAngleDegrees < 0 ? rotAngleDegrees + 360f : rotAngleDegrees);
     }
 
     private void Move()
     {
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
         playerRB.velocity = movement * moveSpeed;
+        animator.SetFloat("Speed", playerRB.velocity.magnitude);
     }
 
     private void Roll() {
@@ -177,6 +181,8 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         isAttacking = false;
+
+        animator.SetTrigger("DoneAttacking");
     }
 
     private void ThrowSpear()
@@ -187,6 +193,7 @@ public class Player : MonoBehaviour
             spearInstance = Instantiate(spearPrefab, transform.position, Quaternion.identity);
             spearInstance.SetActive(false);
             aimStartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            animator.SetTrigger("AimingSpear");
         }
         else if (isAiming && Input.GetMouseButton(1)) // While right-click is held
         {
@@ -208,6 +215,10 @@ public class Player : MonoBehaviour
             //Throw Spear
             spearRigidbody.velocity = throwDirection * throwSpeed; // Set the throwSpeed as a public variable or constant
             spearAmmoCount -= 1;
+
+            animator.SetTrigger("ThrowingSpear");
+
+            StartCoroutine(AttackDuration(1f));
         }
         
     }
@@ -221,12 +232,14 @@ public class Player : MonoBehaviour
             yield return null;
         }
         isAttacking = false;
+        animator.SetTrigger("DoneAttacking");
     }
 
-    IEnumerator ChargeDuration(float duration)
+    IEnumerator ChargeDuration()
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(clubChargeTime);
         isDoneCharging = true;
+        animator.SetTrigger("DoneChargingMelee");
     }
 
     private void SwingClub()
@@ -234,12 +247,15 @@ public class Player : MonoBehaviour
         if (!isCharging && !isAttacking && Input.GetMouseButtonDown(0)) // Press c to swing club
         {
             isCharging = true;
-            StartCoroutine(ChargeDuration(clubChargeTime));
+            StartCoroutine(ChargeDuration());
+            animator.SetTrigger("ChargingMelee");
         }
         else if (!isDoneCharging && Input.GetMouseButtonUp(0)) // if c is release early
         {
-            StopCoroutine(ChargeDuration(clubChargeTime));
+            StopCoroutine(ChargeDuration());
             isCharging = false;
+            isDoneCharging = false;
+            animator.SetTrigger("BrokeChargingMelee");
         }
         else if (isDoneCharging && Input.GetMouseButtonUp(0)) // Release c to swing
         {
@@ -262,6 +278,8 @@ public class Player : MonoBehaviour
             isDoneCharging = false;
             isAttacking = true;
 
+            animator.SetTrigger("SwingingMelee");
+
             // Start coroutine to lock rotation and action of player other then movement
             StartCoroutine(CanSwing());
         }
@@ -278,7 +296,7 @@ public class Player : MonoBehaviour
         Debug.Log("Player took damage: " + damage);
         health -= 1;
     }
-
+/*
     private void Health() {
        if (health > numOfHearts) {
            health = numOfHearts;
@@ -299,7 +317,7 @@ public class Player : MonoBehaviour
            Debug.Log("Player is now dead!");
            gameObject.SetActive(false);
        }
-    }
+    }*/
     #endregion
 
     #region Accessor Functions

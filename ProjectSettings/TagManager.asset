@@ -10,11 +10,12 @@ TagManager:
   - Melee
   - Wall
   - Enemy Projectile
+  - Item
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Pathfinding
   - Water
   - UI
   - Obstacle
@@ -22,7 +23,7 @@ TagManager:
   - Enemy
   - PlayerAttack
   - EnemyAttack
-  - 
+  - Sight
   - 
   - 
   - 
