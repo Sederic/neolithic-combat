@@ -255,7 +255,9 @@ public class Player : MonoBehaviour
         Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
 
         //Instantiate hitbox
-        Instantiate(clubPrefab, hitboxSpawnPosition, spawnRotation);
+        GameObject hitbox = Instantiate(clubPrefab, hitboxSpawnPosition, spawnRotation);
+        //Make the hitbox a child object of player so that it moves alongside player
+        hitbox.transform.parent = transform;
 
         isAttacking = false;
     }
