@@ -214,7 +214,7 @@ public class Enemy : MonoBehaviour {
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Spear") || collision.transform.CompareTag("Melee"))
+        if (collision.transform.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Enemy hit by spear!");
             TakeDamage();
