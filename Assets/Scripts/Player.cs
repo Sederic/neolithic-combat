@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] Sprite emptyHeart;
     [SerializeField] int numOfHearts;
     private Rigidbody2D playerRB;
-    private Renderer playerR;
+    private SpriteRenderer playerR;
     private Animator animator;
     #endregion
 
@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
     void Start() 
     {
         playerRB = GetComponent<Rigidbody2D>();
-        playerR = GetComponent<Renderer>();
+        playerR = GetComponent<SpriteRenderer>();
         rollTimer = rollCooldown;
         rolling = false;
         isInvulnerable = false;
@@ -272,7 +272,27 @@ public class Player : MonoBehaviour
         }
         Debug.Log("Player took damage: " + damage);
         health -= 1;
+        DamageIndicator();
+
     }
+
+    public void DamageIndicator()
+    {
+        StartCoroutine(BlinkRed());
+    }
+
+    IEnumerator BlinkRed()
+    {
+       for (int i = 0; i < 3; i++)
+        {
+            playerR.color = Color.red;
+            yield return new WaitForSeconds(0.2f);
+            playerR.color = Color.white;
+            yield return new WaitForSeconds(0.2f);
+        }
+
+    }
+
 /*
     private void Health() {
        if (health > numOfHearts) {
