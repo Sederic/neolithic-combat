@@ -47,13 +47,15 @@ public class Player : MonoBehaviour
     [SerializeField] float throwSpeed;
     Vector3 aimStartPosition;
     [SerializeField] public int spearAmmoCount;
+    [SerializeField] public GameObject aimingLine;
     #endregion
 
     #region Club Variables
-    [SerializeField] GameObject clubHitbox;
-    [SerializeField] GameObject clubPrefab;
-    [SerializeField] float clubChargeTime;
-
+    [SerializeField] public static GameObject clubHitbox;
+    [SerializeField] public static GameObject clubPrefab;
+    [SerializeField] public static float clubChargeTime;
+    [SerializeField] public static float clubAttackDuration;
+    //Club club = new Club(clubHitbox, clubPrefab, clubChargeTime, clubAttackDuration);
     #endregion
 
     #region Unity Functions
@@ -132,6 +134,17 @@ public class Player : MonoBehaviour
 
             //If player is aiming, reverse the angle (Note the "-180" on angle) Face opposite direction of mouse position relative to player
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 180, Vector3.forward), rotationSpeed * Time.deltaTime);
+
+            //Calculates the angle of rotation of aimingline
+            float rotationAngle = 2f * (float)Math.Asin(transform.rotation.z);
+            Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
+
+            //Calculate placement of aimingline
+            Vector2 aimingLinePosition = 0.9f * spawnDirection + (Vector2)transform.position;
+
+            //Update aimingline
+            aimingLine.transform.position = aimingLinePosition;
+            aimingLine.transform.rotation = transform.rotation;
         }
 
         float rotAngleDegrees = 2.0f * (float)Math.Asin(transform.rotation.z) * (180f / (float)Math.PI);
@@ -189,6 +202,7 @@ public class Player : MonoBehaviour
             spearInstance.SetActive(false);
             aimStartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             animator.SetTrigger("AimingSpear");
+            aimingLine.SetActive(true);
         }
         else if (isAiming && Input.GetMouseButton(1)) // While right-click is held
         {
@@ -213,6 +227,8 @@ public class Player : MonoBehaviour
 
             animator.SetTrigger("ThrowingSpear");
 
+            aimingLine.SetActive(false);
+
             StartCoroutine(AttackDuration(1f));
         }
         
@@ -220,6 +236,19 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Club Functions
+
+    //private void SwingClub()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        club.StartAttackCharge();
+    //    }
+
+    //    if (Input.GetMouseButtonUp(0) && isAttacking)
+    //    {
+    //        club.EndAttackCharge();
+    //    }
+    //}
 
     private void SwingClub()
     {

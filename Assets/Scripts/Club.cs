@@ -3,34 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Club : MonoBehaviour
+public class Club : MeleeWeapon
 {
-    #region Club Variables
-    [SerializeField] float swingDuration;
-    #endregion
 
-    #region Unity Functions
-    private void Start()
+    public Club(GameObject weaponhb, GameObject weaponpf, float weaponct,
+        float attackdur, GameObject player) : base(weaponhb, weaponpf, weaponct, attackdur, player)
     {
-        StartCoroutine(TimedDeath());
-    }
-    #endregion
 
-    #region Club Functions
-    IEnumerator TimedDeath()
-    {
-        yield return new WaitForSeconds(swingDuration);
-        Destroy(gameObject);
     }
-    #endregion 
 
-    #region Collision Functions
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.transform.CompareTag("Enemy"))
-        {
-            Debug.Log("EnemyHit!");
-        }
-    }
-    #endregion
 }
