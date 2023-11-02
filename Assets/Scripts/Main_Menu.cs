@@ -6,7 +6,7 @@ public class Main_Menu : MonoBehaviour
 {
     // Start is called before the first frame update
     public void StartGame() {
-        SceneManager.LoadScene("Level_1");
+        SceneManager.LoadScene("Level 1");
     }
     public void Back() {
         SceneManager.LoadScene("Main_Menu");

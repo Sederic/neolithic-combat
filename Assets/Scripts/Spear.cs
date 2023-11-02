@@ -11,6 +11,11 @@ public class Spear : MonoBehaviour
     [SerializeField] bool retrievable;
     #endregion
 
+    private void Update() 
+    {
+        
+    }
+
     #region Collision Functions
     private void OnTriggerEnter2D(Collider2D collision)
     {

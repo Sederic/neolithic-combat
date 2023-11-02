@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -14,14 +15,18 @@ public class Player : MonoBehaviour
     float rangedAttackInput;
     bool rollInput;
     bool isInvulnerable;
-    [SerializeField] int health = 3;
-    [SerializeField] Image[] hearts;
-    [SerializeField] Sprite fullHeart;
-    [SerializeField] Sprite emptyHeart;
-    [SerializeField] int numOfHearts;
     private Rigidbody2D playerRB;
     private SpriteRenderer playerR;
     private Animator animator;
+    #endregion
+
+    #region Health Variables
+    [SerializeField] int health = 4;
+    [SerializeField] Image heart;
+    [SerializeField] Sprite[] heartSprites;
+    [SerializeField] int maxHealth;
+    [SerializeField] GameObject Death_UI;
+    bool justTookDamage;
     #endregion
 
     #region Movement Variables
@@ -47,6 +52,7 @@ public class Player : MonoBehaviour
     [SerializeField] float throwSpeed;
     Vector3 aimStartPosition;
     [SerializeField] public int spearAmmoCount;
+    [SerializeField] TMP_Text spearAmmoCountText;
     #endregion
 
     #region Club Variables
@@ -64,6 +70,7 @@ public class Player : MonoBehaviour
         rollTimer = rollCooldown;
         rolling = false;
         isInvulnerable = false;
+        justTookDamage = false;
         animator = gameObject.GetComponent<Animator>();
     }
     
@@ -81,7 +88,8 @@ public class Player : MonoBehaviour
             ThrowSpear();
         }
         SwingClub();
-//        Health();
+        Health();
+        spearAmmoCountText.SetText("Spears: " + spearAmmoCount);
     }
 
     // Fixed Update for consistent physics calculations
@@ -266,12 +274,13 @@ public class Player : MonoBehaviour
     #region Health Functions
     public void TakeDamage(int damage)
     {
-        if (isInvulnerable)
+        if (isInvulnerable || justTookDamage)
         {
             return;
         }
         Debug.Log("Player took damage: " + damage);
-        health -= 1;
+        health -= damage;
+        StartCoroutine(damageTick());
         DamageIndicator();
 
     }
@@ -283,38 +292,37 @@ public class Player : MonoBehaviour
 
     IEnumerator BlinkRed()
     {
-       for (int i = 0; i < 3; i++)
-        {
-            playerR.color = Color.red;
-            yield return new WaitForSeconds(0.2f);
-            playerR.color = Color.white;
-            yield return new WaitForSeconds(0.2f);
+        if (!justTookDamage) {
+            for (int i = 0; i < 3; i++)
+            {
+                playerR.color = Color.red;
+                yield return new WaitForSeconds(0.2f);
+                playerR.color = Color.white;
+                yield return new WaitForSeconds(0.2f);
+            }
         }
-
     }
 
-/*
+
     private void Health() {
-       if (health > numOfHearts) {
-           health = numOfHearts;
+       if (health > maxHealth) {
+           health = maxHealth;
        }
-       for (int i = 0; i < hearts.Length; i++) {
-           if (i < health) {
-               hearts[i].sprite = fullHeart;
-           } else {
-               hearts[i].sprite = emptyHeart;
-           }
-           if (i < numOfHearts) {
-               hearts[i].enabled = true;
-           } else {
-               hearts[i].enabled = false;
-           }
+       if (health != 0) {
+           heart.sprite = heartSprites[health-1];
        }
        if (health <= 0) {
            Debug.Log("Player is now dead!");
            gameObject.SetActive(false);
+           heart.enabled = false;
+           Death_UI.SetActive(true);
        }
-    }*/
+    }
+    IEnumerator damageTick() {
+        justTookDamage = true;
+        yield return new WaitForSeconds(1.5f);
+        justTookDamage = false;
+    }
     #endregion
 
     #region Accessor Functions
