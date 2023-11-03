@@ -179,14 +179,14 @@ public class Wolf : MonoBehaviour
             TakeDamage();
         }
 
-        if (collision.transform.CompareTag("Melee"))
+        if (collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Wolf hit by club");
             TakeDamage();
             KnockBack(collision.transform.position);
         }
 
-        if (collision.transform.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Wolf hit player!");
             collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);

@@ -374,6 +374,9 @@ MonoBehaviour:
   spearAmmoCount: 3
   aimingLine: {fileID: 2350195139794361479}
   spearAmmoCountText: {fileID: 0}
+  clubPrefab: {fileID: 5033192843609820090, guid: 06667ce63ff92419d84fa31e413b1805, type: 3}
+  clubChargeTime: 0
+  clubAttackDuration: 0.1
 --- !u!114 &1739554475
 MonoBehaviour:
   m_ObjectHideFlags: 0

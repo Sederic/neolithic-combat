@@ -57,10 +57,9 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Club Variables
-    [SerializeField] public static GameObject clubHitbox;
-    [SerializeField] public static GameObject clubPrefab;
-    [SerializeField] public static float clubChargeTime;
-    [SerializeField] public static float clubAttackDuration;
+    [SerializeField] GameObject clubPrefab;
+    [SerializeField] float clubChargeTime;
+    [SerializeField] float clubAttackDuration;
     //Club club = new Club(clubHitbox, clubPrefab, clubChargeTime, clubAttackDuration);
     #endregion
 
@@ -244,19 +243,6 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Club Functions
-
-    //private void SwingClub()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        club.StartAttackCharge();
-    //    }
-
-    //    if (Input.GetMouseButtonUp(0) && isAttacking)
-    //    {
-    //        club.EndAttackCharge();
-    //    }
-    //}
 
     private void SwingClub()
     {
