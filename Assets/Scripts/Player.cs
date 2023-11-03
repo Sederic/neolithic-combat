@@ -11,8 +11,6 @@ public class Player : MonoBehaviour
     #region Player Variables
     float horizontalInput;
     float verticalInput;
-    float meleeAttackInput;
-    float rangedAttackInput;
     bool rollInput;
     bool isInvulnerable;
     private Rigidbody2D playerRB;
@@ -82,8 +80,6 @@ public class Player : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         rollInput = Input.GetButton("Roll");
-        meleeAttackInput = Input.GetAxis("Fire1");
-        rangedAttackInput = Input.GetAxis("Fire2");
         if (spearAmmoCount > 0)
         {
             ThrowSpear();
@@ -275,7 +271,7 @@ public class Player : MonoBehaviour
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
         //Calculate placement of hitbox
-        Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
+        Vector2 hitboxSpawnPosition = 1.2f * spawnDirection + playerPosition;
 
         //Instantiate hitbox
         GameObject hitbox = Instantiate(clubPrefab, hitboxSpawnPosition, spawnRotation);

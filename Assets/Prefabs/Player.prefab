@@ -367,7 +367,7 @@ MonoBehaviour:
   rollCooldown: 1
   rollDistance: 0.5
   rotationSpeed: 10
-  attackTimer: 0
+  attackTimer: 0.5
   spearHitbox: {fileID: 7049312287300265358, guid: c65463bc14693fc4aa212bd040934b53, type: 3}
   spearPrefab: {fileID: 5033192843609820090, guid: d9555e5024a29ca4a9a7a3718bf45c6e, type: 3}
   throwSpeed: 20
@@ -376,7 +376,7 @@ MonoBehaviour:
   spearAmmoCountText: {fileID: 0}
   clubPrefab: {fileID: 5033192843609820090, guid: 06667ce63ff92419d84fa31e413b1805, type: 3}
   clubChargeTime: 0
-  clubAttackDuration: 0.1
+  clubAttackDuration: 0.5
 --- !u!114 &1739554475
 MonoBehaviour:
   m_ObjectHideFlags: 0
