@@ -291,9 +291,8 @@ public class Player : MonoBehaviour
         }
         Debug.Log("Player took damage: " + damage);
         health -= damage;
-        StartCoroutine(damageTick());
         DamageIndicator();
-
+        StartCoroutine(damageTick());
     }
 
     public void DamageIndicator()
