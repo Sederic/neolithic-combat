@@ -210,7 +210,7 @@ public class Player : MonoBehaviour
         else if (isAiming && Input.GetMouseButton(1)) // While right-click is held
         {
             Vector3 aimCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 backwardDragDirection = (aimStartPosition - aimCurrentPosition).normalized;
+            Vector3 backwardDragDirection = (transform.position - aimCurrentPosition).normalized;
             float angle = Mathf.Atan2(backwardDragDirection.y, backwardDragDirection.x) * Mathf.Rad2Deg;
 
             spearInstance.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
