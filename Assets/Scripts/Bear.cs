@@ -150,7 +150,7 @@ public class Bear : MonoBehaviour
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Spear") || collision.transform.CompareTag("Melee"))
+        if (collision.transform.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Bear hit by spear!");
             TakeDamage();
@@ -158,7 +158,7 @@ public class Bear : MonoBehaviour
         if (collision.transform.CompareTag("Player"))
         {
             Debug.Log("Bear hit player!");
-            collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);
+            collision.collider.gameObject.GetComponent<Player>().TakeDamage(1);
         }
     }
 
