@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
 
     #region Movement Variables
     [SerializeField] float moveSpeed;
+    [SerializeField] float aimingSpeed;
     [SerializeField] float rollSpeed;
     [SerializeField] float rollCooldown;
     [SerializeField] float rollDistance;
@@ -156,7 +157,11 @@ public class Player : MonoBehaviour
     private void Move()
     {
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-        playerRB.velocity = movement * moveSpeed;
+        if (isAiming) {
+            playerRB.velocity = movement * aimingSpeed;
+        } else {
+            playerRB.velocity = movement * moveSpeed;
+        }
     }
 
     private void Roll() {
