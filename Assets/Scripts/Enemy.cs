@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour {
     [SerializeField] float moveSpeed;
     [Tooltip("Divides moveSpeed to determine wandering speed")]
     [SerializeField] float wanderFactor;
-    [SerializeField] float rotationSpeed;
+    [SerializeField] protected float rotationSpeed;
     [SerializeField] int health;
     private float wanderSpeed;
     private float chaseSpeed;
@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour {
     [SerializeField] float repathRate = 1f;
     private Transform targetPosition;
     private Seeker seeker;
-    private Rigidbody2D enemyRB;
+    protected Rigidbody2D enemyRB;
     private Path path;
     private int currentWaypoint = 0;
     private bool reachedEndOfPath;
@@ -32,8 +32,8 @@ public class Enemy : MonoBehaviour {
     [SerializeField] GameObject enemyArrow;
     [SerializeField] float enemyProjectileSpeed;
     [SerializeField] float fireRate;
-    Transform playerTransform;
-    bool playerDetected;
+    protected Transform playerTransform;
+    private bool playerDetected;
     bool isShooting;
     #endregion
 
@@ -69,8 +69,12 @@ public class Enemy : MonoBehaviour {
         }
         
         Move();
+        Ability();
     }
     #endregion
+
+    // TO BE OVERRIDDEN BY CHILDREN OF ENEMY
+    public virtual void Ability() {}
 
     #region Movement Functions
     void OnPathComplete (Path p) {
@@ -91,7 +95,6 @@ public class Enemy : MonoBehaviour {
     }
 
     void Move() {
-
         if (!isRanged)
         {
             if (path == null)
@@ -124,7 +127,7 @@ public class Enemy : MonoBehaviour {
             var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint / nextWaypointDistance) : 1f;
             Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
             enemyRB.velocity = direction * moveSpeed * speedFactor;
         }
     }

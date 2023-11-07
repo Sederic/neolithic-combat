@@ -18,7 +18,9 @@ public class Player : MonoBehaviour
     private Animator animator;
     #endregion
 
+
     #region Health Variables
+    [Header("Health")]
     [SerializeField] int health = 4;
     [SerializeField] Image heart;
     [SerializeField] Sprite[] heartSprites;
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Movement Variables
+    [Header("Movement")]
     [SerializeField] float moveSpeed;
     [SerializeField] float aimingSpeed;
     [SerializeField] float rollSpeed;
@@ -39,27 +42,29 @@ public class Player : MonoBehaviour
     #endregion
 
     #region General Attacking Variables
-    bool isAttacking = false;
+    [Header("Melee")]
     [SerializeField] float attackTimer;
+    bool isAttacking = false;
     #endregion
 
     #region Spear Variables
+    [Header("Ranged")]
     [SerializeField] GameObject spearHitbox;
     [SerializeField] GameObject spearPrefab;
-    GameObject spearInstance;
-    bool isAiming = false;
     [SerializeField] float throwSpeed;
-    Vector3 aimStartPosition;
     [SerializeField] public int spearAmmoCount;
     [SerializeField] public GameObject aimingLine;
     [SerializeField] TMP_Text spearAmmoCountText;
+    GameObject spearInstance;
+    bool isAiming = false;
+    Vector3 aimStartPosition;
     #endregion
 
     #region Club Variables
+    [Header("Club")]
     [SerializeField] GameObject clubPrefab;
     [SerializeField] float clubChargeTime;
     [SerializeField] float clubAttackDuration;
-    //Club club = new Club(clubHitbox, clubPrefab, clubChargeTime, clubAttackDuration);
     #endregion
 
     #region Unity Functions
@@ -239,12 +244,10 @@ public class Player : MonoBehaviour
 
             StartCoroutine(AttackDuration(1f));
         }
-        
     }
     #endregion
 
     #region Club Functions
-
     private void SwingClub()
     {
         if (Input.GetMouseButtonDown(0))
