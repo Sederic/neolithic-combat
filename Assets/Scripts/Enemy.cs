@@ -220,12 +220,12 @@ public class Enemy : MonoBehaviour {
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
+        if (collision.collider.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Enemy hit by spear!");
             TakeDamage();
         }
-        if (collision.transform.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Enemy hit player!");
             collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);
