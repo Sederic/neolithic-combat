@@ -7,43 +7,62 @@ using Pathfinding;
 public class Wolf : Enemy
 {
     #region Prowl Variables
-    bool isChasing;
-    float prowlingSpeed;
-    float currentSpeed;
+    [SerializeField] float prowlSpeed;
+    [SerializeField] float stalkSpeed;
+    [SerializeField] float prowlDuration;
+    [SerializeField] float prowlCooldown;
+    float prowlTimer;
+    bool isProwling;
     #endregion
 
     public Wolf() : base() {}
 
-    public override void Ability() {
-        Prowl();
+    public override void Start()
+    {
+        base.Start();
+        prowlTimer = prowlCooldown;
+        isProwling = false;
+    }
+
+    public override void FixedUpdate()
+    {
+        if (HasLineOfSight()) {
+            if (!isProwling) {
+                if (prowlTimer <= 0) {
+                    Debug.Log("PROWLING");
+                    Prowl();
+                } else {
+                    // Chasing behavior
+                    Debug.Log("CHASING");
+                    moveSpeed = chaseSpeed;
+                }
+            }
+            Repath(playerTransform.position);
+        } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
+            // Wandering behavior
+            Debug.Log("WANDERING");
+            moveSpeed = wanderSpeed;
+            Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+        }
+        prowlTimer -= Time.deltaTime;
+        
+        Move();
     }
 
     #region Prowl Functions
     private void Prowl()
     {
-        if (isChasing)
-        {
-            StartCoroutine(Pounce(3));
-            //Get direction towards player
-            Vector2 direction = (playerTransform.position - transform.position).normalized;
-
-            //Move towards player
-            enemyRB.velocity = direction * currentSpeed;
-
-            //Calculate angle towards player
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-            //Rotate wolf - I had to subtract 90 degrees to this angle because the current wolf sprite is a vertical capsule, make sure to remove the -90 if you wanna copy this code to another sprite
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.deltaTime);
-        }
+        moveSpeed = prowlSpeed;
+        prowlTimer = prowlCooldown;
+        StartCoroutine(Pounce(prowlDuration));
     }
 
     //Charge the player after 3 seconds 
     IEnumerator Pounce(float delay)
     {
+        isProwling = true;
         yield return new WaitForSeconds(delay);
-        currentSpeed = 2f * prowlingSpeed;
-        Debug.Log("The wolf charges!");
+        isProwling = false;
     }
     #endregion
 }

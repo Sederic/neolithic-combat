@@ -7,5 +7,14 @@ public class Bear : Enemy
 {
     public Bear() : base() {}
 
-    public override void Ability() {}
+    public override void Start()
+    {
+        base.Start();
+    }
+
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        
+    }
 }

@@ -5,13 +5,13 @@ using Pathfinding;
 
 public class Enemy : MonoBehaviour {
     #region Enemy Variables
-    [SerializeField] float moveSpeed;
+    [SerializeField] protected float moveSpeed;
     [Tooltip("Divides moveSpeed to determine wandering speed")]
     [SerializeField] float wanderFactor;
     [SerializeField] protected float rotationSpeed;
     [SerializeField] int health;
-    private float wanderSpeed;
-    private float chaseSpeed;
+    protected float wanderSpeed;
+    protected float chaseSpeed;
     [SerializeField] float sightRadius;
     #endregion
 
@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour {
     protected Rigidbody2D enemyRB;
     private Path path;
     private int currentWaypoint = 0;
-    private bool reachedEndOfPath;
+    protected bool reachedEndOfPath;
     private float nextWaypointDistance = 1;
     private float lastRepath = float.NegativeInfinity;
     #endregion
@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour {
 
     #region Unity Functions
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         playerTransform = FindObjectOfType<Player>().transform;
         seeker = GetComponent<Seeker>();
@@ -56,25 +56,27 @@ public class Enemy : MonoBehaviour {
     {
         Shoot();
     }
-    void FixedUpdate()
+    public virtual void FixedUpdate()
     {
-        if (HasLineOfSight()) {
-            // Chasing behavior
-            moveSpeed = chaseSpeed;
-            Repath(playerTransform.position);
-        } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
-            // Wandering behavior 
-            moveSpeed = wanderSpeed;
-            Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+        // Some enemies (such as Wolf) change speed but reset to either
+        // chaseSpeed or wanderSpeed. In order to not override the speed,
+        // moveSpeed is checked here.
+        // FINDING A BETTER WAY TO IMPLEMENT THIS...
+        if (moveSpeed == chaseSpeed || moveSpeed == wanderSpeed) {
+            if (HasLineOfSight()) {
+                // Chasing behavior
+                moveSpeed = chaseSpeed;
+                Repath(playerTransform.position);
+            } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
+                // Wandering behavior
+                moveSpeed = wanderSpeed;
+                Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+            }
         }
         
         Move();
-        Ability();
     }
     #endregion
-
-    // TO BE OVERRIDDEN BY CHILDREN OF ENEMY
-    public virtual void Ability() {}
 
     #region Movement Functions
     void OnPathComplete (Path p) {
@@ -94,7 +96,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    void Move() {
+    protected void Move() {
         if (!isRanged)
         {
             if (path == null)
@@ -132,7 +134,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    void Repath(Vector2 targetPos) {
+    protected void Repath(Vector2 targetPos) {
         if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
             lastRepath = Time.time;
             // targetPosition = collision.transform;
@@ -140,7 +142,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    private bool HasLineOfSight() 
+    protected bool HasLineOfSight() 
     {
         int layerMask =~ LayerMask.GetMask("Enemy");
         Vector3 direction = (playerTransform.position - transform.position);
@@ -155,6 +157,7 @@ public class Enemy : MonoBehaviour {
                 return true;
             }
         }
+        playerDetected = false;
         return false;
     }
     #endregion
