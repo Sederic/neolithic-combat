@@ -61,6 +61,7 @@ public class Player : MonoBehaviour
     [SerializeField] public static GameObject clubPrefab;
     [SerializeField] public static float clubChargeTime;
     [SerializeField] public static float clubAttackDuration;
+    [SerializeField] public MeleeWeaponManager meleeWeaponManager;
     //Club club = new Club(clubHitbox, clubPrefab, clubChargeTime, clubAttackDuration);
     #endregion
 
@@ -245,59 +246,59 @@ public class Player : MonoBehaviour
 
     #region Club Functions
 
-    //private void SwingClub()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        club.StartAttackCharge();
-    //    }
-
-    //    if (Input.GetMouseButtonUp(0) && isAttacking)
-    //    {
-    //        club.EndAttackCharge();
-    //    }
-    //}
-
     private void SwingClub()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            StartCoroutine(ClubAttack());
+            meleeWeaponManager.StartAttackCharge();
         }
 
         if (Input.GetMouseButtonUp(0) && isAttacking)
         {
-            StopCoroutine(ClubAttack());
-            ExecuteAttack();
+            meleeWeaponManager.EndAttackCharge();
         }
     }
 
-    IEnumerator ClubAttack()
-    {
-        yield return new WaitForSeconds(attackTimer);
-        isAttacking = true;
-    }
+    //private void SwingClub()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        StartCoroutine(ClubAttack());
+    //    }
 
-    private void ExecuteAttack()
-    {
-        //Rotation and position of player
-        Quaternion spawnRotation = transform.rotation;
-        Vector2 playerPosition = transform.position;
+    //    if (Input.GetMouseButtonUp(0) && isAttacking)
+    //    {
+    //        StopCoroutine(ClubAttack());
+    //        ExecuteAttack();
+    //    }
+    //}
 
-        //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
-        float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
-        Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
+    //IEnumerator ClubAttack()
+    //{
+    //    yield return new WaitForSeconds(attackTimer);
+    //    isAttacking = true;
+    //}
 
-        //Calculate placement of hitbox
-        Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
+    //private void ExecuteAttack()
+    //{
+    //    //Rotation and position of player
+    //    Quaternion spawnRotation = transform.rotation;
+    //    Vector2 playerPosition = transform.position;
 
-        //Instantiate hitbox
-        GameObject hitbox = Instantiate(clubPrefab, hitboxSpawnPosition, spawnRotation);
-        //Make the hitbox a child object of player so that it moves alongside player
-        hitbox.transform.parent = transform;
+    //    //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
+    //    float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
+    //    Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
-        isAttacking = false;
-    }
+    //    //Calculate placement of hitbox
+    //    Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
+
+    //    //Instantiate hitbox
+    //    GameObject hitbox = Instantiate(clubPrefab, hitboxSpawnPosition, spawnRotation);
+    //    //Make the hitbox a child object of player so that it moves alongside player
+    //    hitbox.transform.parent = transform;
+
+    //    isAttacking = false;
+    //}
     #endregion
 
     #region Health Functions
