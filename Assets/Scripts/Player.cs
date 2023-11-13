@@ -11,8 +11,6 @@ public class Player : MonoBehaviour
     #region Player Variables
     float horizontalInput;
     float verticalInput;
-    float meleeAttackInput;
-    float rangedAttackInput;
     bool rollInput;
     bool isInvulnerable;
     private Rigidbody2D playerRB;
@@ -20,7 +18,9 @@ public class Player : MonoBehaviour
     private Animator animator;
     #endregion
 
+
     #region Health Variables
+    [Header("Health")]
     [SerializeField] int health = 4;
     [SerializeField] Image heart;
     [SerializeField] Sprite[] heartSprites;
@@ -30,7 +30,9 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Movement Variables
+    [Header("Movement")]
     [SerializeField] float moveSpeed;
+    [SerializeField] float aimingSpeed;
     [SerializeField] float rollSpeed;
     [SerializeField] float rollCooldown;
     [SerializeField] float rollDistance;
@@ -40,23 +42,26 @@ public class Player : MonoBehaviour
     #endregion
 
     #region General Attacking Variables
-    bool isAttacking = false;
+    [Header("Melee")]
     [SerializeField] float attackTimer;
+    bool isAttacking = false;
     #endregion
 
     #region Spear Variables
+    [Header("Ranged")]
     [SerializeField] GameObject spearHitbox;
     [SerializeField] GameObject spearPrefab;
-    GameObject spearInstance;
-    bool isAiming = false;
     [SerializeField] float throwSpeed;
-    Vector3 aimStartPosition;
     [SerializeField] public int spearAmmoCount;
     [SerializeField] public GameObject aimingLine;
     [SerializeField] TMP_Text spearAmmoCountText;
+    GameObject spearInstance;
+    bool isAiming = false;
+    Vector3 aimStartPosition;
     #endregion
 
     #region Club Variables
+    [Header("Club")]
     [SerializeField] public static GameObject clubHitbox;
     [SerializeField] public static GameObject clubPrefab;
     [SerializeField] public static float clubChargeTime;
@@ -84,8 +89,6 @@ public class Player : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         rollInput = Input.GetButton("Roll");
-        meleeAttackInput = Input.GetAxis("Fire1");
-        rangedAttackInput = Input.GetAxis("Fire2");
         if (spearAmmoCount > 0)
         {
             ThrowSpear();
@@ -152,8 +155,9 @@ public class Player : MonoBehaviour
             Vector2 aimingLinePosition = 0.9f * spawnDirection + (Vector2)transform.position;
 
             //Update aimingline
-            aimingLine.transform.position = aimingLinePosition;
-            aimingLine.transform.rotation = transform.rotation;
+
+            // aimingLine.transform.position = aimingLinePosition;
+            // aimingLine.transform.rotation = transform.rotation;
         }
 
         float rotAngleDegrees = 2.0f * (float)Math.Asin(transform.rotation.z) * (180f / (float)Math.PI);
@@ -162,7 +166,11 @@ public class Player : MonoBehaviour
     private void Move()
     {
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-        playerRB.velocity = movement * moveSpeed;
+        if (isAiming) {
+            playerRB.velocity = movement * aimingSpeed;
+        } else {
+            playerRB.velocity = movement * moveSpeed;
+        }
     }
 
     private void Roll() {
@@ -216,7 +224,7 @@ public class Player : MonoBehaviour
         else if (isAiming && Input.GetMouseButton(1)) // While right-click is held
         {
             Vector3 aimCurrentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 backwardDragDirection = (aimStartPosition - aimCurrentPosition).normalized;
+            Vector3 backwardDragDirection = (transform.position - aimCurrentPosition).normalized;
             float angle = Mathf.Atan2(backwardDragDirection.y, backwardDragDirection.x) * Mathf.Rad2Deg;
 
             spearInstance.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
@@ -240,12 +248,10 @@ public class Player : MonoBehaviour
 
             StartCoroutine(AttackDuration(1f));
         }
-        
     }
     #endregion
 
     #region Club Functions
-
     private void SwingClub()
     {
         if (Input.GetMouseButtonDown(0))
@@ -281,9 +287,8 @@ public class Player : MonoBehaviour
 
     //private void ExecuteAttack()
     //{
-    //    //Rotation and position of player
-    //    Quaternion spawnRotation = transform.rotation;
-    //    Vector2 playerPosition = transform.position;
+        //Calculate placement of hitbox
+        //Vector2 hitboxSpawnPosition = 1.2f * spawnDirection + playerPosition;
 
     //    //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
     //    float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
@@ -310,9 +315,8 @@ public class Player : MonoBehaviour
         }
         Debug.Log("Player took damage: " + damage);
         health -= damage;
-        StartCoroutine(damageTick());
         DamageIndicator();
-
+        StartCoroutine(damageTick());
     }
 
     public void DamageIndicator()

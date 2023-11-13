@@ -5,13 +5,13 @@ using Pathfinding;
 
 public class Enemy : MonoBehaviour {
     #region Enemy Variables
-    [SerializeField] float moveSpeed;
+    [SerializeField] protected float moveSpeed;
     [Tooltip("Divides moveSpeed to determine wandering speed")]
     [SerializeField] float wanderFactor;
-    [SerializeField] float rotationSpeed;
+    [SerializeField] protected float rotationSpeed;
     [SerializeField] int health;
-    private float wanderSpeed;
-    private float chaseSpeed;
+    protected float wanderSpeed;
+    protected float chaseSpeed;
     [SerializeField] float sightRadius;
     #endregion
 
@@ -19,10 +19,10 @@ public class Enemy : MonoBehaviour {
     [SerializeField] float repathRate = 1f;
     private Transform targetPosition;
     private Seeker seeker;
-    private Rigidbody2D enemyRB;
+    protected Rigidbody2D enemyRB;
     private Path path;
     private int currentWaypoint = 0;
-    private bool reachedEndOfPath;
+    protected bool reachedEndOfPath;
     private float nextWaypointDistance = 1;
     private float lastRepath = float.NegativeInfinity;
     #endregion
@@ -32,14 +32,14 @@ public class Enemy : MonoBehaviour {
     [SerializeField] GameObject enemyArrow;
     [SerializeField] float enemyProjectileSpeed;
     [SerializeField] float fireRate;
-    Transform playerTransform;
-    bool playerDetected;
+    protected Transform playerTransform;
+    private bool playerDetected;
     bool isShooting;
     #endregion
 
     #region Unity Functions
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         playerTransform = FindObjectOfType<Player>().transform;
         seeker = GetComponent<Seeker>();
@@ -56,16 +56,22 @@ public class Enemy : MonoBehaviour {
     {
         Shoot();
     }
-    void FixedUpdate()
+    public virtual void FixedUpdate()
     {
-        if (HasLineOfSight()) {
-            // Chasing behavior
-            moveSpeed = chaseSpeed;
-            Repath(playerTransform.position);
-        } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
-            // Wandering behavior 
-            moveSpeed = wanderSpeed;
-            Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+        // Some enemies (such as Wolf) change speed but reset to either
+        // chaseSpeed or wanderSpeed. In order to not override the speed,
+        // moveSpeed is checked here.
+        // FINDING A BETTER WAY TO IMPLEMENT THIS...
+        if (moveSpeed == chaseSpeed || moveSpeed == wanderSpeed) {
+            if (HasLineOfSight()) {
+                // Chasing behavior
+                moveSpeed = chaseSpeed;
+                Repath(playerTransform.position);
+            } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
+                // Wandering behavior
+                moveSpeed = wanderSpeed;
+                Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+            }
         }
         
         Move();
@@ -90,8 +96,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    void Move() {
-
+    protected void Move() {
         if (!isRanged)
         {
             if (path == null)
@@ -124,12 +129,12 @@ public class Enemy : MonoBehaviour {
             var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint / nextWaypointDistance) : 1f;
             Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
             enemyRB.velocity = direction * moveSpeed * speedFactor;
         }
     }
 
-    void Repath(Vector2 targetPos) {
+    protected void Repath(Vector2 targetPos) {
         if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
             lastRepath = Time.time;
             // targetPosition = collision.transform;
@@ -137,7 +142,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    private bool HasLineOfSight() 
+    protected bool HasLineOfSight() 
     {
         int layerMask =~ LayerMask.GetMask("Enemy");
         Vector3 direction = (playerTransform.position - transform.position);
@@ -152,6 +157,7 @@ public class Enemy : MonoBehaviour {
                 return true;
             }
         }
+        playerDetected = false;
         return false;
     }
     #endregion
@@ -214,12 +220,12 @@ public class Enemy : MonoBehaviour {
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
+        if (collision.collider.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Enemy hit by spear!");
             TakeDamage();
         }
-        if (collision.transform.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Enemy hit player!");
             collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);

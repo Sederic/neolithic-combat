@@ -309,10 +309,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  wanderFactor: 2
   rotationSpeed: 5
   health: 1
   sightRadius: 12
   repathRate: 0.75
+  isRanged: 0
+  enemyArrow: {fileID: 0}
+  enemyProjectileSpeed: 0
+  fireRate: 0
+  prowlSpeed: 10
+  stalkSpeed: 3
+  prowlDuration: 1
+  prowlCooldown: 10
 --- !u!114 &922482935
 MonoBehaviour:
   m_ObjectHideFlags: 0

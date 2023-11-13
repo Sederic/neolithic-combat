@@ -235,6 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
+  wanderFactor: 2
   rotationSpeed: 5
   bearAudio: {fileID: 0}
   health: 3
