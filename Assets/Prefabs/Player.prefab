@@ -373,9 +373,9 @@ MonoBehaviour:
   spearPrefab: {fileID: 5033192843609820090, guid: d9555e5024a29ca4a9a7a3718bf45c6e, type: 3}
   throwSpeed: 20
   spearAmmoCount: 3
-  aimingLine: {fileID: 0}
+  aimingLine: {fileID: 340477199838302925, guid: a9bba39b2c6179f4f99de7e11e9208a2, type: 3}
   spearAmmoCountText: {fileID: 0}
-  meleeWeaponManager: {fileID: 0}
+  meleeWeaponManager: {fileID: 475786548317023544, guid: d832b748a44a1412bb181e50dcaaa59f, type: 3}
 --- !u!114 &1739554475
 MonoBehaviour:
   m_ObjectHideFlags: 0
