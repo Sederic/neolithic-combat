@@ -18,6 +18,7 @@ public class MeleeWeaponManager : MonoBehaviour
     private float attackAnimationDuration;
     public float knockbackScaler;
     public float weaponSize;
+    public int weaponDamage;
     [SerializeField] private GameObject player;
     #endregion
 
@@ -26,10 +27,11 @@ public class MeleeWeaponManager : MonoBehaviour
     private float startTime = 0f;
     private GameObject spawnedWeapon;
     private bool unarmed = true;
+    private bool isAttacking = false;
     #endregion
 
     #region Initialize All Weapons
-    private Club club = new Club();
+    private MeleeWeapon club = new Club("Club", 0.5f, 0.5f, 0.1f, 1f, 1);
     #endregion
 
 
@@ -40,7 +42,15 @@ public class MeleeWeaponManager : MonoBehaviour
         {
             allWeaponPrefabs[go.name] = go;
         }
-        allWeapons["Club"] = club;
+        allWeapons.Add("Club", club);
+
+        weaponPrefab = allWeaponPrefabs["Club"];
+        weaponChargeTime = allWeapons["Club"].weaponChargeTime;
+        attackAnimationDuration = allWeapons["Club"].attackAnimationDuration;
+        knockbackScaler = allWeapons["Club"].knockbackScaler;
+        weaponSize = allWeapons["Club"].weaponSize;
+        weaponDamage = allWeapons["Club"].weaponDamage;
+
     }
 
     // Update is called once per frame
@@ -57,13 +67,17 @@ public class MeleeWeaponManager : MonoBehaviour
         attackAnimationDuration = allWeapons[name].attackAnimationDuration;
         knockbackScaler = allWeapons[name].knockbackScaler;
         weaponSize = allWeapons[name].weaponSize;
+        weaponDamage = allWeapons[name].weaponDamage;
     }
     #endregion
 
     #region Attack Initialize
     public void StartAttackCharge()
     {
+        if (isAttacking) return;
+
         StartCoroutine(ChargeTimer());
+        isAttacking = true;
     }
 
     public void EndAttackCharge()
@@ -87,6 +101,7 @@ public class MeleeWeaponManager : MonoBehaviour
     #region Attack Execution
     public void ExecuteLightAttack()
     {
+        Debug.Log("doing light attack");
         // Spawn the new weapon hitbox
         //Rotation and position of player
         Quaternion spawnRotation = player.transform.rotation;
@@ -100,15 +115,19 @@ public class MeleeWeaponManager : MonoBehaviour
         Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
 
         //Instantiate hitbox
-        spawnedWeapon = UnityEngine.Object.Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
+        spawnedWeapon = Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
         //Make the hitbox a child object of player so that it moves alongside player
         spawnedWeapon.transform.position = player.transform.position;
+
+        ColliderBridge cb = spawnedWeapon.AddComponent<ColliderBridge>();
+        cb.AddMeleeWeaponManager(this, spawnDirection, player);
 
         StartCoroutine(TimedDeath());
     }
 
     public void ExecuteHeavyAttack()
     {
+        Debug.Log("doing heavy attack");
         // Spawn the new weapon hitbox for heavy attack
         //Rotation and position of player
         Quaternion spawnRotation = player.transform.rotation;
@@ -117,15 +136,14 @@ public class MeleeWeaponManager : MonoBehaviour
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
         float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
-
         //Calculate placement of hitbox
         Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
 
         //Instantiate hitbox
-        spawnedWeapon = UnityEngine.Object.Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
-        //Make the hitbox a child object of player so that it moves alongside player
-        spawnedWeapon.transform.position = player.transform.position;
+        spawnedWeapon = Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
 
+        ColliderBridge cb = spawnedWeapon.AddComponent<ColliderBridge>();
+        cb.AddMeleeWeaponManager(this, spawnDirection, player);
 
         StartCoroutine(TimedDeath());
     }
@@ -164,18 +182,22 @@ public class MeleeWeaponManager : MonoBehaviour
 
     IEnumerator TimedDeath()
     {
+        Debug.Log(attackAnimationDuration);
         yield return new WaitForSeconds(attackAnimationDuration);
-        UnityEngine.Object.Destroy(spawnedWeapon);
+        Destroy(spawnedWeapon);
+        isAttacking = false;
     }
     #endregion
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.CompareTag("Enemy"))
         {
             Debug.Log("EnemyHit!");
             Vector2 knockback = CalculateKnockback(collision.transform.position);
             collision.gameObject.GetComponent<Rigidbody2D>().AddForce(knockback);
+
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(weaponDamage);
         }
     }
 }

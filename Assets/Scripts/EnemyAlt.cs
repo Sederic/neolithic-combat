@@ -56,7 +56,7 @@ public class EnemyAlt : MonoBehaviour {
     // Update is called once per frame
     private void Update()
     {
-        Shoot();
+        // Shoot();
     }
     public virtual void FixedUpdate()
     {
@@ -153,11 +153,10 @@ public class EnemyAlt : MonoBehaviour {
         if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
             lastRepath = Time.time;
             if (random) {
-
+                
             } else {
                 seeker.StartPath(transform.position, targetPos, OnPathComplete);
             }
-            
         }
     }
 
@@ -172,9 +171,12 @@ public class EnemyAlt : MonoBehaviour {
         return false;
     }
 
-    // IEnumerator AttackCoroutine() {
-    //     return;
-    // }
+    IEnumerator Attack1Coroutine(Vector2 targetPos) {
+        isAttacking = true;
+
+        yield return new WaitForSeconds(fireRate);
+        isAttacking = false;
+    }
 
     protected bool HasLineOfSight() 
     {

@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
         }
         SwingClub();
         Health();
-        spearAmmoCountText.SetText("Spears: " + spearAmmoCount);
+        //spearAmmoCountText.SetText("Spears: " + spearAmmoCount);
     }
 
     // Fixed Update for consistent physics calculations
@@ -256,11 +256,13 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("Start Melee");
             meleeWeaponManager.StartAttackCharge();
         }
 
-        if (Input.GetMouseButtonUp(0) && isAttacking)
+        if (Input.GetMouseButtonUp(0))
         {
+            Debug.Log("End Melee");
             meleeWeaponManager.EndAttackCharge();
         }
     }
@@ -343,7 +345,7 @@ public class Player : MonoBehaviour
            health = maxHealth;
        }
        if (health != 0) {
-           heart.sprite = heartSprites[health-1];
+           //heart.sprite = heartSprites[health-1];
        }
        if (health <= 0) {
            Debug.Log("Player is now dead!");

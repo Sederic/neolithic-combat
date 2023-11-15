@@ -205,6 +205,16 @@ public class Enemy : MonoBehaviour {
             Destroy(gameObject);
         }
     }
+
+    // This function is exclusively called by the melee weapon manager class
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
     #endregion
 
     #region Collision Detection
@@ -220,7 +230,7 @@ public class Enemy : MonoBehaviour {
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
+        if (collision.collider.CompareTag("Spear"))
         {
             Debug.Log("Enemy hit by spear!");
             TakeDamage();
