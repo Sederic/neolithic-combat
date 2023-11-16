@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
 
     #region Movement Variables
     [Header("Movement")]
-    [SerializeField] float moveSpeed;
+    [SerializeField] public float moveSpeed;
     [SerializeField] float aimingSpeed;
     [SerializeField] float rollSpeed;
     [SerializeField] float rollCooldown;

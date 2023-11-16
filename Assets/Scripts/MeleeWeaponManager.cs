@@ -181,10 +181,14 @@ public class MeleeWeaponManager : MonoBehaviour
 
     IEnumerator TimedDeath(GameObject go)
     {
-        Debug.Log(attackAnimationDuration);
+        float temp_move_speed_holder = player.GetComponent<Player>().moveSpeed;
+        player.GetComponent<Player>().moveSpeed = 0.5f * temp_move_speed_holder;
+
         yield return new WaitForSeconds(attackAnimationDuration);
         Destroy(go);
         isAttacking = false;
+
+        player.GetComponent<Player>().moveSpeed = temp_move_speed_holder;
     }
     #endregion
 
