@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3
   wanderFactor: 2
-  rotationSpeed: 10
+  rotationSpeed: 30
   health: 5
   sightRadius: 10
   followTime: 0

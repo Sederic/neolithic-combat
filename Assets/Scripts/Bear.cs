@@ -83,7 +83,7 @@ public class Bear : MonoBehaviour {
                 
                 if (reachedEndOfPath) {
                     if (Random.Range(0.0f, 1.0f) > 0.75f) {
-                        Repath((Vector2) transform.position + Random.insideUnitCircle * 3);
+                        Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
                     } else { //When finishing path, occasionally stop moving
                         speed = 0;
                     }
@@ -164,13 +164,13 @@ public class Bear : MonoBehaviour {
         if (isAttacking) {
             return true;
         }
-        if (Vector2.Distance(transform.position, targetPos) < 2) {
+        if (Vector2.Distance(transform.position, targetPos) < 5) {
             // if (Random.Range(0.0f, 1.0f) > 0.5f) {
             //     StartCoroutine(LungeCoroutine(playerTransform.position, 16));
             // } else {
             //     StartCoroutine(SwipeCoroutine(playerTransform.position));
             // }
-            StartCoroutine(LungeCoroutine(playerTransform.position, 25));
+            StartCoroutine(LungeCoroutine(playerTransform.position, 20));
             
             return true;
         }
@@ -193,7 +193,7 @@ public class Bear : MonoBehaviour {
             }
             
             //Lunge forward
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 8; i++) {
                 enemyRB.velocity = direction * speed;
                 yield return new WaitForSeconds(0.1f);
             }

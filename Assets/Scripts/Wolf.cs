@@ -83,7 +83,7 @@ public class Wolf : MonoBehaviour {
                 
                 if (reachedEndOfPath) {
                     if (Random.Range(0.0f, 1.0f) > 0.75f) {
-                        Repath((Vector2) transform.position + Random.insideUnitCircle * 3);
+                        Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
                     } else { //When finishing path, occasionally stop moving
                         speed = 0;
                     }
@@ -193,7 +193,7 @@ public class Wolf : MonoBehaviour {
             }
             
             //Lunge forward
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 enemyRB.velocity = direction * speed;
                 yield return new WaitForSeconds(0.1f);
             }
