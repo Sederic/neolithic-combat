@@ -73,17 +73,16 @@ public class EnemyAlt : MonoBehaviour {
 
         //If can move, will chase if player detected or wander if not
         if (canMove) {
-            if (playerDetected) {
+            if (playerDetected) { //If player is detected (set in HasLineOfSight), chase player
                 speed = chaseSpeed;
-                Repath(playerTransform.position, false);
-            } else {
+                Repath(playerTransform.position);
+            } else { //Else, wander
                 speed = wanderSpeed;
                 
                 if (reachedEndOfPath) {
                     if (Random.Range(0.0f, 1.0f) > 0.75f) {
-                        // Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
-                        Repath(playerTransform.position, true);
-                    } else {
+                        Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
+                    } else { //When finishing path, occasionally stop moving
                         speed = 0;
                     }
                 }
@@ -95,7 +94,6 @@ public class EnemyAlt : MonoBehaviour {
 
     #region Movement Functions
     void OnPathComplete (Path p) {
-        // Debug.Log("Path calculated. Error: " + p.error);
         p.Claim(this);
         if (!p.error)
         {
@@ -104,7 +102,6 @@ public class EnemyAlt : MonoBehaviour {
                 path.Release(this);
             }
             path = p;
-            // p.traversalProvider = new GridShapeTraversalProvider.SquareShape(3);
             currentWaypoint = 0;
         } else {
             p.Release(this);
@@ -149,14 +146,10 @@ public class EnemyAlt : MonoBehaviour {
         }
     }
 
-    protected void Repath(Vector2 targetPos, bool random) {
+    protected void Repath(Vector2 targetPos) {
         if (Time.time > lastRepath + repathRate && seeker.IsDone()) {
             lastRepath = Time.time;
-            if (random) {
-                
-            } else {
-                seeker.StartPath(transform.position, targetPos, OnPathComplete);
-            }
+            seeker.StartPath(transform.position, targetPos, OnPathComplete);
         }
     }
 
@@ -166,25 +159,77 @@ public class EnemyAlt : MonoBehaviour {
         if (!playerDetected) {
             return false;
         }
+        if (isAttacking) {
+            return true;
+        }
         if (Vector2.Distance(transform.position, targetPos) < 2) {
-            StartCoroutine(Attack1Coroutine(playerTransform.position, 6));
+            // if (Random.Range(0.0f, 1.0f) > 0.5f) {
+            //     StartCoroutine(LungeCoroutine(playerTransform.position, 16));
+            // } else {
+            //     StartCoroutine(SwipeCoroutine(playerTransform.position));
+            // }
+            StartCoroutine(LungeCoroutine(playerTransform.position, 14));
+            
             return true;
         }
         return false;
     }
 
-    IEnumerator Attack1Coroutine(Vector2 targetPos, int speed) {
-        isAttacking = true;
+    IEnumerator LungeCoroutine(Vector2 targetPos, int speed) {
+        //Check whether enemy is attacking, if they are, do nothing
+        if (!isAttacking) {
+            isAttacking = true;
+            //Determine direction to player and rotate enemy. Runs at beginning of attack so enemy does not recalculate rotation even if player moves
+            Vector3 direction = (playerTransform.position - transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
 
-        yield return new WaitForSeconds(1);
-        Vector3 direction = (playerTransform.position - transform.position).normalized;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
-        enemyRB.velocity = direction * speed;
-        yield return new WaitForSeconds(0.25f);
-        enemyRB.velocity = Vector2.zero;
-        yield return new WaitForSeconds(2);
-        isAttacking = false;
+            //Back up
+            for (int i = 0; i < 5; i++) {
+                enemyRB.velocity = direction * (speed / 4) * -1;
+                yield return new WaitForSeconds(0.1f);
+            }
+            
+            //Lunge forward
+            for (int i = 0; i < 5; i++) {
+                enemyRB.velocity = direction * speed;
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            //Pause
+            enemyRB.velocity = Vector2.zero;
+            yield return new WaitForSeconds(0.75f);
+            isAttacking = false;
+        }
+    }
+
+    IEnumerator SwipeCoroutine(Vector2 targetPos, int speed) {
+        if (!isAttacking) {
+            isAttacking = true;
+            // Vector3 direction = (playerTransform.position - transform.position).normalized;
+            // float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+            // Quaternion direction = Quaternion.SetFromToRotation(transform.position, playerTransform.position);
+
+            // for (int i = 0; i < 3; i++) {
+            //     Debug.Log(transform.rotation.eulerAngles);
+            //     enemyRB.velocity = transform.rotation.eulerAngles.normalized * (speed / 6) * -1;
+            //     yield return new WaitForSeconds(0.1f);
+            // }
+
+            // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+            // //Lunge forward
+            // Quaternion test = Quaternion.AngleAxis(0, direction);
+            // for (int i = 0; i < 2; i++) {
+            //     enemyRB.velocity = test.eulerAngles.normalized * speed;
+            //     yield return new WaitForSeconds(0.1f);
+            // }
+
+            //Pause
+            enemyRB.velocity = Vector2.zero;
+            yield return new WaitForSeconds(0.75f);
+            isAttacking = false;
+        }
     }
 
     protected bool HasLineOfSight() 

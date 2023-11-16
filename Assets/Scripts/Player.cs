@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D playerRB;
     private SpriteRenderer playerR;
     private Animator animator;
+    private ParticleSystem bloodPS;
     #endregion
 
 
@@ -80,6 +81,7 @@ public class Player : MonoBehaviour
         isInvulnerable = false;
         justTookDamage = false;
         animator = gameObject.GetComponent<Animator>();
+        bloodPS = GameObject.Find("Blood Splatter").GetComponent<ParticleSystem>();
     }
     
     // Update is called once per frame
@@ -329,6 +331,7 @@ public class Player : MonoBehaviour
     IEnumerator BlinkRed()
     {
         if (!justTookDamage) {
+            bloodPS.Play();
             for (int i = 0; i < 3; i++)
             {
                 playerR.color = Color.red;

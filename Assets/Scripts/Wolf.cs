@@ -29,18 +29,18 @@ public class Wolf : Enemy
         if (HasLineOfSight()) {
             if (!isProwling) {
                 if (prowlTimer <= 0) {
-                    Debug.Log("PROWLING");
+                    // Debug.Log("PROWLING");
                     Prowl();
                 } else {
                     // Chasing behavior
-                    Debug.Log("CHASING");
+                    // Debug.Log("CHASING");
                     moveSpeed = chaseSpeed;
                 }
             }
             Repath(playerTransform.position);
         } else if (reachedEndOfPath || enemyRB.velocity.magnitude <= 0.001f) {
             // Wandering behavior
-            Debug.Log("WANDERING");
+            // Debug.Log("WANDERING");
             moveSpeed = wanderSpeed;
             Repath((Vector2) transform.position + Random.insideUnitCircle * 2);
         }
