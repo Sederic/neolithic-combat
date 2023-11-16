@@ -160,21 +160,30 @@ public class EnemyAlt : MonoBehaviour {
         }
     }
 
+
     //Assumes HasLineOfSight has been run
     protected bool Attack(Vector2 targetPos) {
         if (!playerDetected) {
             return false;
         }
         if (Vector2.Distance(transform.position, targetPos) < 2) {
+            StartCoroutine(Attack1Coroutine(playerTransform.position, 6));
             return true;
         }
         return false;
     }
 
-    IEnumerator Attack1Coroutine(Vector2 targetPos) {
+    IEnumerator Attack1Coroutine(Vector2 targetPos, int speed) {
         isAttacking = true;
 
-        yield return new WaitForSeconds(fireRate);
+        yield return new WaitForSeconds(1);
+        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle - 90, Vector3.forward), rotationSpeed * Time.fixedDeltaTime);
+        enemyRB.velocity = direction * speed;
+        yield return new WaitForSeconds(0.25f);
+        enemyRB.velocity = Vector2.zero;
+        yield return new WaitForSeconds(2);
         isAttacking = false;
     }
 
