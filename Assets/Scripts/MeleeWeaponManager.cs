@@ -116,13 +116,11 @@ public class MeleeWeaponManager : MonoBehaviour
 
         //Instantiate hitbox
         spawnedWeapon = Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
-        //Make the hitbox a child object of player so that it moves alongside player
-        spawnedWeapon.transform.position = player.transform.position;
 
         ColliderBridge cb = spawnedWeapon.AddComponent<ColliderBridge>();
         cb.AddMeleeWeaponManager(this, spawnDirection, player);
 
-        StartCoroutine(TimedDeath());
+        StartCoroutine(TimedDeath(spawnedWeapon));
     }
 
     public void ExecuteHeavyAttack()
@@ -136,6 +134,7 @@ public class MeleeWeaponManager : MonoBehaviour
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
         float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
+
         //Calculate placement of hitbox
         Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
 
@@ -145,7 +144,7 @@ public class MeleeWeaponManager : MonoBehaviour
         ColliderBridge cb = spawnedWeapon.AddComponent<ColliderBridge>();
         cb.AddMeleeWeaponManager(this, spawnDirection, player);
 
-        StartCoroutine(TimedDeath());
+        StartCoroutine(TimedDeath(spawnedWeapon));
     }
 
     public Vector2 CalculateKnockback(Vector2 enemyPosition)
@@ -180,11 +179,11 @@ public class MeleeWeaponManager : MonoBehaviour
     }
 
 
-    IEnumerator TimedDeath()
+    IEnumerator TimedDeath(GameObject go)
     {
         Debug.Log(attackAnimationDuration);
         yield return new WaitForSeconds(attackAnimationDuration);
-        Destroy(spawnedWeapon);
+        Destroy(go);
         isAttacking = false;
     }
     #endregion
