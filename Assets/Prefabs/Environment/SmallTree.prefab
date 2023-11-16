@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6528555506116155788}
   - component: {fileID: 865225553}
   - component: {fileID: 865225554}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SmallTree
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
