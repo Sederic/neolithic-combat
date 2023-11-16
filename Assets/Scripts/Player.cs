@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
         isInvulnerable = false;
         justTookDamage = false;
         animator = gameObject.GetComponent<Animator>();
-        bloodPS = GameObject.Find("Blood Splatter").GetComponent<ParticleSystem>();
+        bloodPS = GetComponentInChildren<ParticleSystem>();
     }
     
     // Update is called once per frame
