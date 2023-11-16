@@ -346,7 +346,7 @@ public class Player : MonoBehaviour
            health = maxHealth;
        }
        if (health != 0) {
-           //heart.sprite = heartSprites[health-1];
+           heart.sprite = heartSprites[health-1];
        }
        if (health <= 0) {
            Debug.Log("Player is now dead!");
