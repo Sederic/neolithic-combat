@@ -115,7 +115,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4209548760718143461}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1479111927600819279
 MonoBehaviour:
@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 1171294726}
   - component: {fileID: 1739554475}
   - component: {fileID: -8823947526733874797}
+  - component: {fileID: 1443461719}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -247,8 +248,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 160525212}
-  - {fileID: 8136312131120326281}
   - {fileID: 3799799061205699077}
+  - {fileID: 8136312131120326281}
+  - {fileID: 639585260}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -272,7 +274,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 22fe4c341b83ca44a8fd7b5a93315106, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -375,7 +377,7 @@ MonoBehaviour:
   spearAmmoCount: 3
   aimingLine: {fileID: 340477199838302925, guid: a9bba39b2c6179f4f99de7e11e9208a2, type: 3}
   spearAmmoCountText: {fileID: 0}
-  meleeWeaponManager: {fileID: 475786548317023544, guid: d832b748a44a1412bb181e50dcaaa59f, type: 3}
+  meleeWeaponManager: {fileID: 0}
 --- !u!114 &1739554475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,7 +403,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4209548760718143457}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: cc4910e4b58bc40f5ab8c3646d259451, type: 2}
   m_CullingMode: 0
@@ -413,6 +415,95 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &1443461719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4209548760718143457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 3f5be82a00000000
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  m_ShapePathHash: 0
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 59814
+--- !u!1001 &759579920900524201
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4209548760718143461}
+    m_Modifications:
+    - target: {fileID: 759579920397812546, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_Name
+      value: Blood Splatter
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.03999996
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+--- !u!4 &639585260 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 759579920397812549, guid: 7ef3cf81d128b7b42b74c9c64a1e9dd3, type: 3}
+  m_PrefabInstance: {fileID: 759579920900524201}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3459335335299520718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -422,7 +513,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 340477199838302923, guid: a9bba39b2c6179f4f99de7e11e9208a2, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 340477199838302923, guid: a9bba39b2c6179f4f99de7e11e9208a2, type: 3}
       propertyPath: m_LocalPosition.x
