@@ -11,17 +11,16 @@ public abstract class MeleeWeapon
     public float attackAnimationDuration;
     public float knockbackScaler;
     public float weaponSize;
+    public int weaponDamage;
     #endregion
 
-    //public MeleeWeapon(GameObject weaponhb, GameObject weaponpf, float weaponct,
-    //    float attackdur, GameObject p)
-    //{
-    //    weaponHitbox = weaponhb;
-    //    weaponPrefab = weaponpf;
-    //    weaponChargeTime = weaponct;
-    //    attackAnimationDuration = attackdur;
-    //    player = p;
-
-    //    mBehaviour = weaponPrefab.GetComponent<MonoBehaviour>();
-    //}
+    public MeleeWeapon(string wn, float wct, float aad, float ks, float ws, int wd)
+    {
+        weaponName = wn;
+        weaponChargeTime = wct;
+        attackAnimationDuration = aad;
+        knockbackScaler = ks;
+        weaponSize = ws;
+        weaponDamage = wd;
+    }
 }
