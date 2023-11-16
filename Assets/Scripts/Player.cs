@@ -97,7 +97,7 @@ public class Player : MonoBehaviour
         }
         SwingClub();
         Health();
-        //spearAmmoCountText.SetText("Spears: " + spearAmmoCount);
+        spearAmmoCountText.SetText("Spears: " + spearAmmoCount);
     }
 
     // Fixed Update for consistent physics calculations
@@ -105,8 +105,6 @@ public class Player : MonoBehaviour
     {
         // SpearAttack();
         FaceDirection();
-        
-        // Health();
 
         if (rollInput && rollTimer <= 0 && !rolling)
         {
