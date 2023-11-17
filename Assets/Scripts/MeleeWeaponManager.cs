@@ -74,16 +74,15 @@ public class MeleeWeaponManager : MonoBehaviour
     #region Attack Initialize
     public void StartAttackCharge()
     {
-        if (isAttacking) return;
-
         StartCoroutine(ChargeTimer());
-        isAttacking = true;
     }
 
     public void EndAttackCharge()
     {
         //doneCharging = (Time.time - startTime) > weaponChargeTime;
         StopCoroutine(ChargeTimer());
+
+        if (isAttacking) return;
 
         if (doneCharging)
         {
@@ -95,6 +94,7 @@ public class MeleeWeaponManager : MonoBehaviour
         }
 
         doneCharging = false;
+        isAttacking = true;
     }
     #endregion
 
