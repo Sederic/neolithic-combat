@@ -12,23 +12,11 @@ public class Player : MonoBehaviour
     float horizontalInput;
     float verticalInput;
     bool rollInput;
-    bool isInvulnerable;
+    public bool isInvulnerable;
     private Rigidbody2D playerRB;
     private SpriteRenderer playerR;
     private Animator animator;
-    private ParticleSystem bloodPS;
     #endregion
-
-    #region Health Variables
-    [Header("Health")]
-    [SerializeField] int health = 4;
-    [SerializeField] Image heart;
-    [SerializeField] Sprite[] heartSprites;
-    [SerializeField] int maxHealth;
-    [SerializeField] GameObject Death_UI;
-    bool justTookDamage;
-    #endregion
-
     #region Movement Variables
     [Header("Movement")]
     bool playerMoving;
@@ -80,9 +68,7 @@ public class Player : MonoBehaviour
         rollTimer = rollCooldown;
         rolling = false;
         isInvulnerable = false;
-        justTookDamage = false;
         animator = gameObject.GetComponent<Animator>();
-        bloodPS = GetComponentInChildren<ParticleSystem>();
     }
     
     // Update is called once per frame
@@ -96,8 +82,8 @@ public class Player : MonoBehaviour
         {
             ThrowSpear();
         }
+        
         SwingClub();
-        Health();
         spearAmmoCountText.SetText("Spears: " + spearAmmoCount);
     }
 
@@ -275,60 +261,6 @@ public class Player : MonoBehaviour
     //}
     #endregion
 
-    #region Health Functions
-    public void TakeDamage(int damage)
-    {
-        if (isInvulnerable || justTookDamage)
-        {
-            return;
-        }
-        Debug.Log("Player took damage: " + damage);
-        health -= damage;
-        DamageIndicator();
-        StartCoroutine(damageTick());
-    }
-
-    public void DamageIndicator()
-    {
-        StartCoroutine(BlinkRed());
-    }
-
-    IEnumerator BlinkRed()
-    {
-        if (!justTookDamage) {
-            bloodPS.Play();
-            for (int i = 0; i < 3; i++)
-            {
-                playerR.color = Color.red;
-                yield return new WaitForSeconds(0.2f);
-                playerR.color = Color.white;
-                yield return new WaitForSeconds(0.2f);
-            }
-        }
-    }
-
-
-    private void Health() {
-       if (health > maxHealth) {
-           health = maxHealth;
-       }
-       if (health != 0) {
-           heart.sprite = heartSprites[health-1];
-       }
-       if (health <= 0) {
-           Debug.Log("Player is now dead!");
-           gameObject.SetActive(false);
-           heart.enabled = false;
-           Death_UI.SetActive(true);
-       }
-    }
-    IEnumerator damageTick() {
-        justTookDamage = true;
-        yield return new WaitForSeconds(1.5f);
-        justTookDamage = false;
-    }
-    #endregion
-
     #region Accessor Functions
     public bool aiming() {
         return this.isAiming;
@@ -339,4 +271,12 @@ public class Player : MonoBehaviour
         return horizontalInput != 0f || verticalInput != 0f;
     }
     #endregion
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.transform.CompareTag("Chest") && Input.GetKeyDown(KeyCode.X)) {
+            collision.transform.GetComponent<Chest>().Interact();
+        }
+
+    }
+    
 }

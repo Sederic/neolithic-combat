@@ -9,7 +9,7 @@ public class Arrow : MonoBehaviour {
     {
         if (collision.transform.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<Player>().TakeDamage(1);
+            collision.gameObject.GetComponent<HealthManager>().TakeDamage(1);
             Debug.Log("Player hit by arrow");
             Destroy(gameObject);
         }

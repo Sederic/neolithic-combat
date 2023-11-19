@@ -238,7 +238,7 @@ public class Enemy : MonoBehaviour {
         if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Enemy hit player!");
-            collision.transform.gameObject.GetComponent<Player>().TakeDamage(1);
+            collision.transform.gameObject.GetComponent<HealthManager>().TakeDamage(1);
         }
     }
     #endregion
