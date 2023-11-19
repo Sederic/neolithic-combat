@@ -31,8 +31,9 @@ public class Player : MonoBehaviour
 
     #region Movement Variables
     [Header("Movement")]
+    bool playerMoving;
     [SerializeField] public float moveSpeed;
-    [SerializeField] float aimingSpeed;
+    [SerializeField] float aimingMoveSpeed;
     [SerializeField] float rollSpeed;
     [SerializeField] float rollCooldown;
     [SerializeField] float rollDistance;
@@ -87,8 +88,8 @@ public class Player : MonoBehaviour
     // Should not be used for anything involving physics
     private void Update()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
         rollInput = Input.GetButton("Roll");
         if (spearAmmoCount > 0)
         {
@@ -165,14 +166,19 @@ public class Player : MonoBehaviour
     private void Move()
     {
         Vector2 movement = new Vector2(horizontalInput, verticalInput).normalized;
-        if (isAiming) {
-            playerRB.velocity = movement * aimingSpeed;
-        } else {
+        if (isAiming)
+        {
+            playerRB.velocity = movement * aimingMoveSpeed;
+        }
+        else
+        {
             playerRB.velocity = movement * moveSpeed;
         }
 
         animator.SetFloat("Horizontal Input", horizontalInput);
         animator.SetFloat("Vertical Input", verticalInput);
+        animator.SetFloat("Move Magnitude", movement.magnitude);
+   
     }
 
     private void Roll() {
@@ -369,7 +375,8 @@ public class Player : MonoBehaviour
         return this.isAiming;
     }
 
-    public bool isMoving() {
+    public bool isMoving()
+    {
         return horizontalInput != 0f || verticalInput != 0f;
     }
     #endregion
