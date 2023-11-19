@@ -19,7 +19,6 @@ public class Player : MonoBehaviour
     private ParticleSystem bloodPS;
     #endregion
 
-
     #region Health Variables
     [Header("Health")]
     [SerializeField] int health = 4;
@@ -171,6 +170,9 @@ public class Player : MonoBehaviour
         } else {
             playerRB.velocity = movement * moveSpeed;
         }
+
+        animator.SetFloat("Horizontal Input", horizontalInput);
+        animator.SetFloat("Vertical Input", verticalInput);
     }
 
     private void Roll() {
