@@ -40,7 +40,6 @@ public class CameraZoom : MonoBehaviour
         if (!zooming) {
             // StopAllCoroutines();
             if (playerScript.aiming()) {
-                Debug.Log("Aiming");
                 StartCoroutine(ZoomFunction(aimingFOV, zoomTransitionDuration));
             } else {
                 // Debug.Log("Moving");
