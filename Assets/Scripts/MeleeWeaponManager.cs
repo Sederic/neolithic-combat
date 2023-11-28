@@ -101,10 +101,10 @@ public class MeleeWeaponManager : MonoBehaviour
     #region Attack Execution
     public void ExecuteLightAttack()
     {
-        Debug.Log("doing light attack");
+        //Debug.Log("doing light attack");
         // Spawn the new weapon hitbox
         //Rotation and position of player
-        Quaternion spawnRotation = player.transform.rotation;
+        Quaternion spawnRotation = player.GetComponent<Player>().lookDir;
         Vector2 playerPosition = player.transform.position;
 
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
@@ -128,7 +128,7 @@ public class MeleeWeaponManager : MonoBehaviour
         Debug.Log("doing heavy attack");
         // Spawn the new weapon hitbox for heavy attack
         //Rotation and position of player
-        Quaternion spawnRotation = player.transform.rotation;
+        Quaternion spawnRotation = player.GetComponent<Player>().lookDir;
         Vector2 playerPosition = player.transform.position;
 
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
