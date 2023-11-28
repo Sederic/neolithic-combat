@@ -23,6 +23,7 @@ public class MeleeWeaponManager : MonoBehaviour
     #endregion
 
     #region Execution Time Variables
+    [SerializeField] GameObject attackArrow;
     private bool doneCharging = false;
     private float startTime = 0f;
     private GameObject spawnedWeapon;
@@ -50,7 +51,6 @@ public class MeleeWeaponManager : MonoBehaviour
         knockbackScaler = allWeapons["Club"].knockbackScaler;
         weaponSize = allWeapons["Club"].weaponSize;
         weaponDamage = allWeapons["Club"].weaponDamage;
-
     }
 
     // Update is called once per frame
@@ -104,15 +104,15 @@ public class MeleeWeaponManager : MonoBehaviour
         //Debug.Log("doing light attack");
         // Spawn the new weapon hitbox
         //Rotation and position of player
-        Quaternion spawnRotation = player.GetComponent<Player>().lookDir;
-        Vector2 playerPosition = player.transform.position;
+        Quaternion spawnRotation = attackArrow.transform.rotation;
+        Vector2 attackPosition = attackArrow.transform.position;
 
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
         float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
         //Calculate placement of hitbox
-        Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
+        Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + attackPosition;
 
         //Instantiate hitbox
         spawnedWeapon = Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
@@ -128,15 +128,15 @@ public class MeleeWeaponManager : MonoBehaviour
         Debug.Log("doing heavy attack");
         // Spawn the new weapon hitbox for heavy attack
         //Rotation and position of player
-        Quaternion spawnRotation = player.GetComponent<Player>().lookDir;
-        Vector2 playerPosition = player.transform.position;
+        Quaternion spawnRotation = attackArrow.transform.rotation;
+        Vector2 attackPosition = attackArrow.transform.position;
 
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
         float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
         //Calculate placement of hitbox
-        Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + playerPosition;
+        Vector2 hitboxSpawnPosition = 2f * spawnDirection + attackPosition;
 
         //Instantiate hitbox
         spawnedWeapon = Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
@@ -151,15 +151,15 @@ public class MeleeWeaponManager : MonoBehaviour
     {
         // Spawn the new weapon hitbox for heavy attack
         //Rotation and position of player
-        Quaternion spawnRotation = player.transform.rotation;
-        Vector2 playerPosition = player.transform.position;
+        Quaternion spawnRotation = attackArrow.transform.rotation;
+        Vector2 attackPosition = attackArrow.transform.position;
 
         float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
         // Closer the enemy is the more they will get knocked back
         // Simply scales the knockback scaler value
-        float dis = Vector2.Distance(playerPosition, enemyPosition);
+        float dis = Vector2.Distance(attackPosition, enemyPosition);
         float dis_scaler = (weaponSize - dis) / weaponSize;
 
         if (dis_scaler >= 0)
