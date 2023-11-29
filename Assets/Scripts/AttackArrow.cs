@@ -20,6 +20,7 @@ public class AttackArrow : MonoBehaviour
     void Update()
     {
         FaceDirection();
+        //Debug.Log(gameObject.transform.eulerAngles);
     }
 
     private void FaceDirection()
