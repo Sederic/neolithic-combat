@@ -40,6 +40,12 @@ public class Bear : MonoBehaviour {
     bool isAttacking;
     #endregion
 
+    #region SFX Variables
+    [SerializeField] AudioSource bearAttack;
+    [SerializeField] AudioSource beartookDamage;
+    [SerializeField] AudioSource bearDie;
+    #endregion
+
     #region Unity Functions
     // Start is called before the first frame update
     public virtual void Start()
@@ -171,6 +177,7 @@ public class Bear : MonoBehaviour {
             //     StartCoroutine(SwipeCoroutine(playerTransform.position));
             // }
             StartCoroutine(LungeCoroutine(playerTransform.position, 20));
+            bearAttack.Play();
             
             return true;
         }
@@ -287,12 +294,14 @@ public class Bear : MonoBehaviour {
     #endregion
 
     #region Health Functions
-    private void TakeDamage()
+    private void TakeDamage(int damage)
     {
         bloodPS.Play();
-        health--;
+        beartookDamage.Play();
+        health -= damage;
         if (health <= 0)
         {
+            bearDie.Play();
             Destroy(gameObject);
         }
     }
@@ -304,17 +313,17 @@ public class Bear : MonoBehaviour {
     {
         if (collision.transform.CompareTag("Spear"))
         {
-            TakeDamage();
+            TakeDamage(collision.transform.GetComponent<Player>().spearDamage);
         }
     }
 
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
+        if (collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Enemy hit by spear!");
-            TakeDamage();
+            TakeDamage(collision.transform.GetComponent<Player>().meleeDamage);
         }
         if (collision.collider.CompareTag("Player"))
         {

@@ -13,6 +13,8 @@ public class HealthManager : MonoBehaviour
     [SerializeField] Sprite[] heartSprites;
     [SerializeField] int maxHealth;
     [SerializeField] GameObject Death_UI;
+    [SerializeField] AudioSource tookDamage;
+    [SerializeField] AudioSource die;
     private ParticleSystem bloodPS;
     private SpriteRenderer playerR;
     bool justTookDamage;
@@ -33,19 +35,24 @@ public class HealthManager : MonoBehaviour
 
     #region Health Functions
     
-    private void Health() {
-       if (health > maxHealth) {
-           health = maxHealth;
-       }
-       if (health != 0) {
-           heart.sprite = heartSprites[health-1];
-       }
-       if (health <= 0) {
-           Debug.Log("Player is now dead!");
-           gameObject.SetActive(false);
-           heart.enabled = false;
-           Death_UI.SetActive(true);
-       }
+    private void Health() 
+    {
+        if (health > maxHealth) 
+        {
+            health = maxHealth;
+        }
+        if (health != 0) 
+        {
+            heart.sprite = heartSprites[health-1];
+        }
+        if (health <= 0) 
+        {
+            die.Play();
+            Debug.Log("Player is now dead!");
+            gameObject.SetActive(false);
+            heart.enabled = false;
+            Death_UI.SetActive(true);
+        }
     }
 
     public void TakeDamage(int damage)
@@ -56,6 +63,7 @@ public class HealthManager : MonoBehaviour
         }
         Debug.Log("Player took damage: " + damage);
         health -= damage;
+        tookDamage.Play();
         DamageIndicator();
         StartCoroutine(damageTick());
     }
