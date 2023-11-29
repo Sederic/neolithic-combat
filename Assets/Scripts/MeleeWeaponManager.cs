@@ -101,18 +101,18 @@ public class MeleeWeaponManager : MonoBehaviour
     #region Attack Execution
     public void ExecuteLightAttack()
     {
-        //Debug.Log("doing light attack");
+        Debug.Log("doing light attack");
         // Spawn the new weapon hitbox
         //Rotation and position of player
         Quaternion spawnRotation = attackArrow.transform.rotation;
         Vector2 attackPosition = attackArrow.transform.position;
 
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
-        float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
+        float rotationAngle = attackArrow.transform.eulerAngles.z * Mathf.Deg2Rad;
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
         //Calculate placement of hitbox
-        Vector2 hitboxSpawnPosition = 0.9f * spawnDirection + attackPosition;
+        Vector2 hitboxSpawnPosition = 2f * spawnDirection + attackPosition;
 
         //Instantiate hitbox
         spawnedWeapon = Instantiate(weaponPrefab, hitboxSpawnPosition, spawnRotation);
@@ -127,12 +127,13 @@ public class MeleeWeaponManager : MonoBehaviour
     {
         Debug.Log("doing heavy attack");
         // Spawn the new weapon hitbox for heavy attack
-        //Rotation and position of player
+        // Rotation and position of player
         Quaternion spawnRotation = attackArrow.transform.rotation;
         Vector2 attackPosition = attackArrow.transform.position;
 
         //Calculates the angle of rotation of the palyer so melee hitbox appears infrnt of player
-        float rotationAngle = 2f * (float)Math.Asin(spawnRotation.z);
+        //float rotationAngle = 2f * (float)Math.Asin(spawnRotation.w);
+        float rotationAngle = attackArrow.transform.eulerAngles.z * Mathf.Deg2Rad;
         Vector2 spawnDirection = new Vector2((float)Math.Cos(rotationAngle), (float)Math.Sin(rotationAngle));
 
         //Calculate placement of hitbox
