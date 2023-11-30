@@ -42,7 +42,6 @@ public class Bear : MonoBehaviour {
 
     #region SFX Variables
     [SerializeField] AudioSource bearAttack;
-    [SerializeField] AudioSource beartookDamage;
     [SerializeField] AudioSource bearDie;
     #endregion
 
@@ -51,6 +50,7 @@ public class Bear : MonoBehaviour {
     public virtual void Start()
     {
         playerTransform = FindObjectOfType<Player>().transform;
+        Debug.Log(playerTransform.gameObject.GetComponent<Player>().doubleDamage);
         seeker = GetComponent<Seeker>();
         enemyRB = GetComponent<Rigidbody2D>();
         playerDetected = false;
@@ -297,13 +297,20 @@ public class Bear : MonoBehaviour {
     private void TakeDamage(int damage)
     {
         bloodPS.Play();
-        beartookDamage.Play();
         health -= damage;
         if (health <= 0)
         {
             bearDie.Play();
-            Destroy(gameObject);
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            this.gameObject.GetComponent<Bear>().enabled = false;
+            this.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
         }
+    }
+
+    IEnumerator death()
+    {
+        yield return new WaitForSeconds(2f);
+        Destroy(this.gameObject);
     }
     #endregion
 
@@ -313,7 +320,14 @@ public class Bear : MonoBehaviour {
     {
         if (collision.transform.CompareTag("Spear"))
         {
-//            TakeDamage(collision.transform.GetComponent<Player>().spearDamage);
+            if (playerTransform.GetComponent<Player>().doubleDamage) 
+            {
+                TakeDamage(playerTransform.GetComponent<Player>().spearDamage*2);
+            }
+            else
+            {
+                TakeDamage(playerTransform.GetComponent<Player>().spearDamage);
+            }
         }
     }
 
@@ -323,7 +337,16 @@ public class Bear : MonoBehaviour {
         if (collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Enemy hit by spear!");
-//            TakeDamage(collision.transform.GetComponent<Player>().meleeDamage);
+            if (playerTransform.GetComponent<Player>().doubleDamage) 
+            {
+                Debug.Log("DOUBLE DAMAGEEE!!!!");
+                TakeDamage(playerTransform.GetComponent<Player>().meleeDamage*2);
+            }
+            else
+            {
+                Debug.Log("sike");
+                TakeDamage(playerTransform.GetComponent<Player>().meleeDamage);
+            }
         }
         if (collision.collider.CompareTag("Player"))
         {

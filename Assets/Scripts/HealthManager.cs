@@ -49,7 +49,10 @@ public class HealthManager : MonoBehaviour
         {
             die.Play();
             Debug.Log("Player is now dead!");
-            gameObject.SetActive(false);
+            StartCoroutine(Die());
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            this.gameObject.GetComponent<Player>().enabled = false;
+            this.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
             heart.enabled = false;
             Death_UI.SetActive(true);
         }
@@ -85,6 +88,12 @@ public class HealthManager : MonoBehaviour
                 yield return new WaitForSeconds(0.2f);
             }
         }
+    }
+
+    IEnumerator Die() 
+    {
+        yield return new WaitForSeconds(2f);
+        Destroy(this.gameObject);
     }
 
     IEnumerator damageTick() {

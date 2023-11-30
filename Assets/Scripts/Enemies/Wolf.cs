@@ -16,6 +16,8 @@ public class Wolf : MonoBehaviour {
     [SerializeField] float followTime;
     private ParticleSystem bloodPS;
     private float speed; //Actual speed used for movement. Changes based on whether enemy attacking
+    [SerializeField] AudioSource wolfDie;
+    [SerializeField] AudioSource wolfAttack;
     #endregion
 
     #region Pathing Variables
@@ -171,6 +173,7 @@ public class Wolf : MonoBehaviour {
             //     StartCoroutine(SwipeCoroutine(playerTransform.position));
             // }
             StartCoroutine(LungeCoroutine(playerTransform.position, 25));
+            wolfAttack.Play();
             
             return true;
         }
@@ -287,14 +290,23 @@ public class Wolf : MonoBehaviour {
     #endregion
 
     #region Health Functions
-    private void TakeDamage()
+    private void TakeDamage(int damage)
     {
         bloodPS.Play();
-        health--;
+        health -= damage;
         if (health <= 0)
         {
-            Destroy(gameObject);
+            wolfDie.Play();
+            this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            this.gameObject.GetComponent<Wolf>().enabled = false;
+            this.gameObject.GetComponent<PolygonCollider2D>().enabled = false;
         }
+    }
+
+    IEnumerator death()
+    {
+        yield return new WaitForSeconds(2f);
+        Destroy(this.gameObject);
     }
     #endregion
 
@@ -304,17 +316,33 @@ public class Wolf : MonoBehaviour {
     {
         if (collision.transform.CompareTag("Spear"))
         {
-            TakeDamage();
+            if (playerTransform.GetComponent<Player>().doubleDamage) 
+            {
+                TakeDamage(playerTransform.GetComponent<Player>().spearDamage*2);
+            }
+            else
+            {
+                TakeDamage(playerTransform.GetComponent<Player>().spearDamage);
+            }
         }
     }
 
     // Body Collider
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Spear") || collision.collider.CompareTag("Melee"))
+        if (collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Enemy hit by spear!");
-            TakeDamage();
+            if (playerTransform.GetComponent<Player>().doubleDamage) 
+            {
+                Debug.Log("DOUBLE DAMAGEEE!!!!");
+                TakeDamage(playerTransform.GetComponent<Player>().meleeDamage*2);
+            }
+            else
+            {
+                Debug.Log("sike");
+                TakeDamage(playerTransform.GetComponent<Player>().meleeDamage);
+            }
         }
         if (collision.collider.CompareTag("Player"))
         {

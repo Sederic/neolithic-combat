@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D playerRB;
     private SpriteRenderer playerR;
     private Animator animator;
+    public bool doubleDamage;
     #endregion
     #region Movement Variables
     [Header("Movement")]
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] float rollCooldown;
     [SerializeField] float rollDistance;
     [SerializeField] float rotationSpeed;
+    [SerializeField] AudioSource backgroundMusic;
     private float rollTimer;
     private bool rolling;
     public Quaternion lookDir;
@@ -46,6 +48,7 @@ public class Player : MonoBehaviour
     [SerializeField] public int spearAmmoCount;
     [SerializeField] public GameObject aimingLine;
     [SerializeField] TMP_Text spearAmmoCountText;
+    [SerializeField] public int spearDamage;
     GameObject spearInstance;
     public bool isAiming = false;
     Vector3 aimStartPosition;
@@ -58,6 +61,7 @@ public class Player : MonoBehaviour
     [SerializeField] public static float clubChargeTime;
     [SerializeField] public static float clubAttackDuration;
     [SerializeField] public MeleeWeaponManager meleeWeaponManager;
+    [SerializeField] public int meleeDamage;
     //Club club = new Club(clubHitbox, clubPrefab, clubChargeTime, clubAttackDuration);
     #endregion
 
@@ -70,6 +74,7 @@ public class Player : MonoBehaviour
         rolling = false;
         isInvulnerable = false;
         animator = gameObject.GetComponent<Animator>();
+        doubleDamage = false;
     }
     
     // Update is called once per frame
