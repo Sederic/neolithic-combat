@@ -121,8 +121,8 @@ public class MeleeWeaponManager : MonoBehaviour
         ColliderBridge cb = spawnedWeapon.AddComponent<ColliderBridge>();
         cb.AddMeleeWeaponManager(this, spawnDirection, player);
 
-        Animator anim = spawnedWeapon.AddComponent<Animator>();
-        anim.runtimeAnimatorController = currAnimControl;
+/*        Animator anim = spawnedWeapon.AddComponent<Animator>();
+        anim.runtimeAnimatorController = currAnimControl;*/
 
         StartCoroutine(TimedDeath(spawnedWeapon));
     }
@@ -148,9 +148,9 @@ public class MeleeWeaponManager : MonoBehaviour
 
         ColliderBridge cb = spawnedWeapon.AddComponent<ColliderBridge>();
         cb.AddMeleeWeaponManager(this, spawnDirection, player);
-
+/*
         Animator anim = spawnedWeapon.AddComponent<Animator>();
-        anim.runtimeAnimatorController = currAnimControl;
+        anim.runtimeAnimatorController = currAnimControl;*/
 
         StartCoroutine(TimedDeath(spawnedWeapon));
     }

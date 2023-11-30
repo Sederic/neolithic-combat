@@ -313,7 +313,7 @@ public class Bear : MonoBehaviour {
     {
         if (collision.transform.CompareTag("Spear"))
         {
-            TakeDamage(collision.transform.GetComponent<Player>().spearDamage);
+//            TakeDamage(collision.transform.GetComponent<Player>().spearDamage);
         }
     }
 
@@ -323,7 +323,7 @@ public class Bear : MonoBehaviour {
         if (collision.collider.CompareTag("Melee"))
         {
             Debug.Log("Enemy hit by spear!");
-            TakeDamage(collision.transform.GetComponent<Player>().meleeDamage);
+//            TakeDamage(collision.transform.GetComponent<Player>().meleeDamage);
         }
         if (collision.collider.CompareTag("Player"))
         {
