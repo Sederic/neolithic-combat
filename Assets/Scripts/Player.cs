@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     private Animator animator;
     public bool doubleDamage;
     #endregion
+
     #region Movement Variables
     [Header("Movement")]
     bool playerMoving;
