@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     [SerializeField] float rollDistance;
     [SerializeField] float rotationSpeed;
     [SerializeField] AudioSource backgroundMusic;
+    [SerializeField] public AudioSource swingSFX;
     private float rollTimer;
     private bool rolling;
     public Quaternion lookDir;

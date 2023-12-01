@@ -9,6 +9,7 @@ public class MeleeWeaponManager : MonoBehaviour
     private Dictionary<string, GameObject> allWeaponPrefabs = new Dictionary<string, GameObject>();
     private Dictionary<string, MeleeWeapon> allWeapons = new Dictionary<string, MeleeWeapon>();
     [SerializeField] private GameObject[] allWeaponPrefabsArray;
+    private Transform playerTransform;
     #endregion
 
     #region Current Weapon Variables
@@ -37,9 +38,11 @@ public class MeleeWeaponManager : MonoBehaviour
     #endregion
 
 
+
     // Start is called before the first frame update
     void Start()
     {
+        playerTransform = FindObjectOfType<Player>().transform;
         foreach (GameObject go in allWeaponPrefabsArray)
         {
             allWeaponPrefabs[go.name] = go;
@@ -88,10 +91,12 @@ public class MeleeWeaponManager : MonoBehaviour
         if (doneCharging)
         {
             ExecuteHeavyAttack();
+            playerTransform.GetComponent<Player>().swingSFX.Play();
         }
         else
         {
             ExecuteLightAttack();
+            playerTransform.GetComponent<Player>().swingSFX.Play();
         }
 
         doneCharging = false;
