@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEditor.Rendering.LookDev;
+using UnityEditor.Build;
 
 public class AttackArrow : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class AttackArrow : MonoBehaviour
 
     private void FaceDirection()
     {
-        if (!isAiming)
+        if (!player.aiming())
         {
             //Get mouse cordinates - from camera to world
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -39,7 +40,7 @@ public class AttackArrow : MonoBehaviour
             //Rotate player towards mouse position
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotationSpeed * Time.deltaTime);
         }
-        else if (isAiming)
+        else if (player.aiming())
         {
             //Same code as above, except the last line
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
