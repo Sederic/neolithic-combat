@@ -213,7 +213,7 @@ public class MeleeWeaponManager : MonoBehaviour
             Vector2 knockback = CalculateKnockback(collision.transform.position);
             collision.gameObject.GetComponent<Rigidbody2D>().AddForce(knockback);
 
-            collision.gameObject.GetComponent<Enemy>().TakeDamage(weaponDamage);
+            //collision.gameObject.GetComponent<Enemy>().TakeDamage(weaponDamage);
         }
     }
 }
