@@ -10,10 +10,7 @@ public class Spinach : MonoBehaviour
     {
         playerTransform = FindObjectOfType<Player>().transform;
     }
-    void Update()
-    {
-        Debug.Log(playerTransform.GetComponent<Player>().doubleDamage);
-    }
+
     private void OnTriggerEnter2D(Collider2D collision) 
     {
         if (collision.CompareTag("Player")) {
