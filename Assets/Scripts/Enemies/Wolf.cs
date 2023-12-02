@@ -18,6 +18,8 @@ public class Wolf : MonoBehaviour {
     private float speed; //Actual speed used for movement. Changes based on whether enemy attacking
     [SerializeField] AudioSource wolfDie;
     [SerializeField] AudioSource wolfAttack;
+    [SerializeField] AudioSource meleeHit;
+    [SerializeField] AudioSource rangedHit;
     #endregion
 
     #region Pathing Variables
@@ -316,9 +318,10 @@ public class Wolf : MonoBehaviour {
     {
         if (collision.transform.CompareTag("Spear"))
         {
-            if (playerTransform.GetComponent<Player>().doubleDamage) 
+            rangedHit.Play();
+            if (playerTransform.GetComponent<Player>().doubleDamage)
             {
-                TakeDamage(playerTransform.GetComponent<Player>().spearDamage*2);
+                TakeDamage(playerTransform.GetComponent<Player>().spearDamage * 2);
             }
             else
             {
@@ -332,11 +335,13 @@ public class Wolf : MonoBehaviour {
     {
         if (collision.collider.CompareTag("Melee"))
         {
-            Debug.Log("Enemy hit by spear!");
+            
+            meleeHit.Play();
             if (playerTransform.GetComponent<Player>().doubleDamage) 
             {
                 Debug.Log("DOUBLE DAMAGEEE!!!!");
                 TakeDamage(playerTransform.GetComponent<Player>().meleeDamage*2);
+                
             }
             else
             {
@@ -344,6 +349,7 @@ public class Wolf : MonoBehaviour {
                 TakeDamage(playerTransform.GetComponent<Player>().meleeDamage);
             }
         }
+
         if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Enemy hit player!");

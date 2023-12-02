@@ -43,6 +43,8 @@ public class Bear : MonoBehaviour {
     #region SFX Variables
     [SerializeField] AudioSource bearAttack;
     [SerializeField] AudioSource bearDie;
+    [SerializeField] AudioSource meleeHit;
+    [SerializeField] AudioSource rangedHit;
     #endregion
 
     #region Unity Functions
@@ -320,9 +322,11 @@ public class Bear : MonoBehaviour {
     {
         if (collision.transform.CompareTag("Spear"))
         {
+            rangedHit.Play();
             if (playerTransform.GetComponent<Player>().doubleDamage) 
             {
                 TakeDamage(playerTransform.GetComponent<Player>().spearDamage*2);
+                
             }
             else
             {
@@ -336,11 +340,13 @@ public class Bear : MonoBehaviour {
     {
         if (collision.collider.CompareTag("Melee"))
         {
+            meleeHit.Play();
             Debug.Log("Enemy hit by spear!");
             if (playerTransform.GetComponent<Player>().doubleDamage) 
             {
                 Debug.Log("DOUBLE DAMAGEEE!!!!");
                 TakeDamage(playerTransform.GetComponent<Player>().meleeDamage*2);
+                
             }
             else
             {

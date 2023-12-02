@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
     [SerializeField] public int spearAmmoCount;
     [SerializeField] public GameObject aimingLine;
     [SerializeField] TMP_Text spearAmmoCountText;
-    [SerializeField] public int spearDamage;
+    [SerializeField] public int spearDamage = 3;
     GameObject spearInstance;
     public bool isAiming = false;
     Vector3 aimStartPosition;

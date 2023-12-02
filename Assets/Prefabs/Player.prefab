@@ -278,7 +278,7 @@ MonoBehaviour:
   spearAmmoCount: 3
   aimingLine: {fileID: 3799799061205699075}
   spearAmmoCountText: {fileID: 0}
-  spearDamage: 1
+  spearDamage: 3
   isAiming: 0
   meleeWeaponManager: {fileID: 0}
   meleeDamage: 2
