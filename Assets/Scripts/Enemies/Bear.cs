@@ -38,6 +38,7 @@ public class Bear : MonoBehaviour {
     protected Transform playerTransform;
     private bool playerDetected;
     bool isAttacking;
+    [SerializeField] int bearDamage;
     #endregion
 
     #region SFX Variables
@@ -357,7 +358,7 @@ public class Bear : MonoBehaviour {
         if (collision.collider.CompareTag("Player"))
         {
             Debug.Log("Enemy hit player!");
-            collision.transform.gameObject.GetComponent<HealthManager>().TakeDamage(1);
+            collision.transform.gameObject.GetComponent<HealthManager>().TakeDamage(bearDamage);
         }
     }
     #endregion

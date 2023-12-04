@@ -257,6 +257,7 @@ MonoBehaviour:
   enemyArrow: {fileID: 0}
   enemyProjectileSpeed: 0
   fireRate: 0
+  bearDamage: 1
   bearAttack: {fileID: -9007164583411137535}
   bearDie: {fileID: 2464267318703052575}
   meleeHit: {fileID: 3139914785318968264}
