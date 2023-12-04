@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
     [SerializeField] public int spearDamage = 3;
     GameObject spearInstance;
     public bool isAiming = false;
+    public bool throwCooldown;
     Vector3 aimStartPosition;
     #endregion
 
@@ -173,6 +174,10 @@ public class Player : MonoBehaviour
 
     private void ThrowSpear()
     {
+        if (throwCooldown)
+        {
+            return;
+        }
         if (Input.GetMouseButtonDown(1)) // Right-click to start aiming
         {
             isAiming = true;
@@ -208,7 +213,14 @@ public class Player : MonoBehaviour
             aimingLine.SetActive(false);
 
             StartCoroutine(AttackDuration(1f));
+            StartCoroutine(spearCooldown());
         }
+    }
+    IEnumerator spearCooldown() 
+    {
+        throwCooldown = true;
+        yield return new WaitForSeconds(1.0f);
+        throwCooldown = false;
     }
     #endregion
 
